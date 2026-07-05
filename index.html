@@ -1,0 +1,5071 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="运营管理40题速背复习网页">
+  <title>运营管理40题速背</title>
+  <style>
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --text: #272725;
+  --muted: #787774;
+  --line: #e8e7e4;
+  --soft: #f1f1ef;
+  --green: #2f7d4a;
+  --green-soft: #edf7f0;
+  --red: #b54a4a;
+  --red-soft: #fff3f2;
+  --shadow: 0 1px 2px rgba(15, 15, 15, .04), 0 4px 14px rgba(15, 15, 15, .035);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  line-height: 1.65;
+  transition: color .2s, background .2s;
+}
+button, input { font: inherit; }
+button { color: inherit; }
+
+.hero { background: var(--surface); border-bottom: 1px solid var(--line); }
+.hero-inner, .container { width: min(1040px, calc(100% - 40px)); margin: 0 auto; }
+.hero-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 42px 0 34px; }
+.eyebrow { margin: 0 0 5px; color: var(--green); font-size: 12px; font-weight: 700; letter-spacing: .14em; }
+h1 { margin: 0; font-size: clamp(28px, 5vw, 42px); letter-spacing: -.04em; line-height: 1.25; }
+.subtitle { margin: 8px 0 0; color: var(--muted); }
+.container { padding: 28px 0 70px; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+.stat { display: flex; flex-direction: column; padding: 18px 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); }
+.stat strong { font-size: 27px; line-height: 1.2; }
+.stat span { margin-top: 4px; color: var(--muted); font-size: 13px; }
+.progress-stat strong { color: var(--green); }
+.correct-stat strong { color: var(--green); }
+.wrong-stat strong { color: var(--red); }
+
+.toolbar { position: sticky; z-index: 10; top: 0; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: color-mix(in srgb, var(--surface) 94%, transparent); box-shadow: var(--shadow); backdrop-filter: blur(12px); }
+.unit-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.unit-toolbar span { flex: none; color: var(--muted); font-size: 13px; font-weight: 650; }
+.unit-toolbar select { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; outline: none; color: var(--text); background: var(--surface); }
+.search-wrap { display: flex; align-items: center; gap: 9px; padding: 0 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--bg); }
+.search-wrap span { color: var(--muted); font-size: 21px; transform: rotate(-15deg); }
+.search-wrap input { width: 100%; padding: 10px 0; border: 0; outline: 0; color: var(--text); background: transparent; }
+.search-wrap input::placeholder { color: var(--muted); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+button { padding: 8px 13px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; transition: transform .15s, border-color .15s, background .15s; }
+button:hover { border-color: #b9b8b5; background: var(--soft); }
+button:active { transform: scale(.98); }
+button.active, button[aria-pressed="true"] { color: var(--green); border-color: #a9cfb5; background: var(--green-soft); }
+button.danger { color: var(--red); }
+button.primary { color: #fff; border-color: var(--green); background: var(--green); }
+button.primary:hover { border-color: var(--green); background: #286d40; }
+.icon-btn { flex: none; }
+
+.result-row { display: flex; justify-content: space-between; margin: 22px 2px 12px; color: var(--muted); font-size: 13px; }
+#filterHint { color: var(--red); }
+.question-list { display: grid; gap: 14px; }
+.question-card { scroll-margin-top: 165px; padding: 22px; border: 1px solid var(--line); border-left: 4px solid #d7d6d3; border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); transition: border .2s, background .2s, transform .2s; }
+.question-card.mastered { border-color: #9bcaab; border-left-color: var(--green); background: linear-gradient(90deg, var(--green-soft), var(--surface) 18%); }
+.question-card.answered-wrong { border-right-color: #e4aaaa; }
+.question-card.needs-answer { animation: shake .35s ease 2; border-color: var(--red); }
+.question-card.random-hit { animation: pulse 1.15s ease; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 35% { transform: scale(1.012); box-shadow: 0 0 0 5px rgba(47,125,74,.13); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 35% { transform: translateX(-5px); } 70% { transform: translateX(5px); } }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
+.meta { display: flex; align-items: center; gap: 9px; }
+.number { font-weight: 750; font-size: 17px; }
+.type-tag { padding: 2px 8px; border-radius: 999px; color: var(--muted); background: var(--soft); font-size: 12px; }
+.mastered-badge { color: var(--green); font-size: 13px; font-weight: 600; }
+.card-badges { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+.history-wrong-badge { padding: 2px 8px; border-radius: 999px; color: var(--red); background: var(--red-soft); font-size: 12px; font-weight: 650; }
+.question-text { margin: 0 0 14px; font-size: 16px; font-weight: 600; }
+.options { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.option { padding: 0; border: 1px solid transparent; border-radius: 7px; color: #4d4c49; background: var(--bg); transition: border-color .15s, background .15s; }
+.option label { display: flex; align-items: flex-start; gap: 10px; padding: 9px 11px; cursor: pointer; }
+.option input { flex: none; width: 17px; height: 17px; margin: 4px 0 0; accent-color: var(--green); cursor: pointer; }
+.option:has(input:checked) { border-color: #aebeb3; }
+.option.correct-option { border-color: #8fc29f; color: var(--green); background: var(--green-soft); font-weight: 650; }
+.option.wrong-option { border-color: #dda09c; color: var(--red); background: var(--red-soft); }
+.calculation-note { padding: 12px 14px; border-radius: 8px; color: var(--muted); background: var(--soft); }
+.card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 17px; padding-top: 14px; border-top: 1px solid var(--line); }
+.answer-panel { margin-top: 14px; padding: 13px 15px; border: 1px solid #bcdcc5; border-radius: 8px; color: var(--green); background: var(--green-soft); font-weight: 700; }
+.answer-panel[hidden] { display: none; }
+.submit-result { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 14px; padding: 13px 15px; border: 1px solid; border-radius: 8px; }
+.submit-result strong { width: 100%; }
+.correct-result { color: var(--green); border-color: #9bcaab; background: var(--green-soft); }
+.wrong-result { color: var(--red); border-color: #dda09c; background: var(--red-soft); }
+.corrected-note { padding: 1px 7px; border-radius: 999px; color: var(--red); background: var(--red-soft); font-size: 12px; font-weight: 650; }
+.master-btn.is-mastered { color: var(--green); border-color: #9bcaab; background: var(--green-soft); }
+.empty { padding: 60px 20px; text-align: center; color: var(--muted); }
+.empty div { color: var(--text); font-size: 18px; font-weight: 650; }
+.back-top { position: fixed; right: 22px; bottom: 22px; width: 42px; height: 42px; padding: 0; border-radius: 50%; box-shadow: var(--shadow); opacity: 0; pointer-events: none; }
+.back-top.visible { opacity: 1; pointer-events: auto; }
+
+body.dark {
+  --bg: #191919; --surface: #242424; --text: #efefed; --muted: #a4a39f; --line: #383838; --soft: #303030;
+  --green: #79c791; --green-soft: #22362a; --red: #ed8d8d; --red-soft: #3a2626; --shadow: 0 2px 12px rgba(0,0,0,.2);
+}
+body.dark .option { color: #d0cfca; }
+body.dark button.primary { color: #102416; background: var(--green); }
+
+@media (max-width: 700px) {
+  .hero-inner, .container { width: min(100% - 24px, 1040px); }
+  .hero-inner { align-items: flex-start; padding: 28px 0 24px; }
+  .subtitle { font-size: 14px; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .stat { padding: 14px 16px; }
+  .toolbar { top: 6px; }
+  .actions { display: grid; grid-template-columns: repeat(2, 1fr); }
+  .actions button { padding: 9px 6px; font-size: 13px; }
+  .question-card { scroll-margin-top: 225px; padding: 17px 15px; }
+  .card-head { align-items: flex-start; }
+  .mastered-badge { font-size: 0; }
+  .mastered-badge:not(:empty)::after { content: "✓"; font-size: 14px; }
+  .icon-btn { padding: 7px 9px; font-size: 12px; }
+  .card-actions button { flex: 1 1 calc(50% - 8px); padding-inline: 6px; font-size: 13px; }
+  .submit-result { display: grid; gap: 3px; }
+}
+
+@media (max-width: 390px) {
+  .hero-inner { display: block; }
+  .icon-btn { margin-top: 14px; }
+}
+
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div>
+        <p class="eyebrow">OPERATIONS MANAGEMENT</p>
+        <h1>运营管理40题速背</h1>
+        <p class="subtitle">轻量复习 · 即开即用 · 进度自动保存</p>
+      </div>
+      <button id="themeToggle" class="icon-btn" type="button" aria-label="切换深色模式">☾ 深色模式</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stats" aria-label="题库统计">
+      <div class="stat"><strong id="totalCount">40</strong><span>题目总数</span></div>
+      <div class="stat"><strong id="multipleCount">25</strong><span>选择题</span></div>
+      <div class="stat"><strong id="judgeCount">15</strong><span>判断题</span></div>
+      <div class="stat progress-stat"><strong id="masteredCount">0</strong><span>已掌握</span></div>
+      <div class="stat"><strong id="answeredCount">0</strong><span>已作答</span></div>
+      <div class="stat correct-stat"><strong id="correctCount">0</strong><span>正确</span></div>
+      <div class="stat wrong-stat"><strong id="wrongCount">0</strong><span>错题记录</span></div>
+      <div class="stat"><strong id="accuracyCount">—</strong><span>正确率</span></div>
+    </section>
+
+    <section class="toolbar" aria-label="复习工具">
+      <div class="unit-toolbar">
+        <span>选择单元</span>
+        <select id="unitSelect" aria-label="选择题库单元"></select>
+      </div>
+      <div class="search-wrap">
+        <span aria-hidden="true">⌕</span>
+        <input id="searchInput" type="search" placeholder="搜索题号或关键词…" autocomplete="off" aria-label="搜索题目">
+      </div>
+      <div class="actions">
+        <button id="submitAll" class="primary" type="button">提交全部</button>
+        <button id="clearAll" type="button">清空全部</button>
+        <button id="showAll" type="button">展开全部答案</button>
+        <button id="hideAll" type="button">隐藏全部答案</button>
+        <button id="unmasteredOnly" type="button" aria-pressed="false">只看未掌握</button>
+        <button id="wrongOnly" type="button" aria-pressed="false">只看错题</button>
+        <button id="unansweredOnly" type="button" aria-pressed="false">只看未作答</button>
+        <button id="showAllQuestions" type="button" aria-pressed="true">显示全部题目</button>
+        <button id="randomQuestion" type="button">随机抽题</button>
+        <button id="resetMastered" class="danger" type="button">重置掌握状态</button>
+      </div>
+    </section>
+
+    <div class="result-row">
+      <span id="resultCount">显示 40 道题</span>
+      <span id="filterHint" hidden></span>
+    </div>
+    <section id="questionList" class="question-list" aria-live="polite"></section>
+    <div id="emptyState" class="empty" hidden>
+      <div>没有找到匹配的题目</div>
+      <small>换个关键词试试吧。</small>
+    </div>
+  </main>
+
+  <button id="backToTop" class="back-top" type="button" aria-label="返回顶部">↑</button>
+  <script>
+const questions = [
+  { id: 1, type: "multiple", question: "某种零件的需要量是由哪些项决定的？", options: ["A. 净需要量", "B. 现有数", "C. 上层元件的计划发出订货量", "D. 上层元件的总需要量"], answer: "ABCD" },
+  { id: 2, type: "multiple", question: "流程分析的常用方法包括", options: ["A. 头脑风暴法", "B. 德尔菲法", "C. 5W1H分析法", "D. 鱼骨图", "E. 层次分析法"], answer: "ACD" },
+  { id: 3, type: "multiple", question: "企业选址主要考虑的因素包括", options: ["A. 核心战略", "B. 地理文化", "C. 经济财务", "D. 政治法律", "E. 社会文化"], answer: "ABCDE" },
+  { id: 4, type: "multiple", question: "流程优化的目的包括以下哪些", options: ["A. 降低成本", "B. 改善用户体验", "C. 提高效率", "D. 增强灵活性", "E. 提升员工工作积极性"], answer: "ABCD" },
+  { id: 5, type: "multiple", question: "对于订货型企业，在年度生产计划中，确定（ ）是最重要的决策。", options: ["A. 品种", "B. 交货期", "C. 成本", "D. 价格", "E. 产量"], answer: "BD" },
+  { id: 6, type: "multiple", question: "处理非均匀需求的调整能力策略主要包括以下哪些", options: ["A. 利用库存调节", "B. 转包", "C. 利用兼职员工", "D. 改变劳动力数量", "E. 员工加班加点"], answer: "ABCDE" },
+  { id: 7, type: "multiple", question: "下列不属于中期计划的是（ ）。", options: ["A. 主生产计划", "B. 车间作业计划", "C. 资源能力计划", "D. 物料需求计划"], answer: "BCD" },
+  { id: 8, type: "multiple", question: "从概念上讲，JIT可做到（ ）", options: ["A. 没有等待零件加工的机器", "B. 没有无事可干的工人", "C. 仓库里没有存货", "D. 工作在加工过程中没有等待"], answer: "ABCD" },
+  { id: 9, type: "multiple", question: "MRP的扩展大致经历了以下哪几个阶段？", options: ["A. 闭环MRP", "B. ERP", "C. MRPII", "D. 开环MRP"], answer: "ABC" },
+  { id: 10, type: "multiple", question: "库存状态信息包括（ ）", options: ["A. 订购批量", "B. 计划入库量", "C. 提前期", "D. 当前库存量", "E. 安全库存量"], answer: "ABCDE" },
+  { id: 11, type: "multiple", question: "对于订货型企业，在年度生产计划中，确定（ ）是最重要的决策。", options: ["A. 交货期", "B. 成本", "C. 价格", "D. 产量", "E. 品种"], answer: "AC" },
+  { id: 12, type: "multiple", question: "下列关于新产品开发重要性的说法正确的是（ ）", options: ["A. 新产品能帮助企业掌握市场动向", "B. 新产品开发直接关系到企业的生存和发展", "C. 企业要靠新产品去占领市场一席之地", "D. 企业靠新产品才能赢得竞争优势"], answer: "BCD" },
+  { id: 13, type: "multiple", question: "下列不属于中期计划的是（ ）。", options: ["A. 主生产计划", "B. 资源能力计划", "C. 车间作业计划", "D. 物料需求计划"], answer: "BCD" },
+  { id: 14, type: "multiple", question: "企业的生产计划主要包括（ ）", options: ["A. 综合生产计划", "B. 资源能力计划", "C. 产品交付计划", "D. 产品出产计划"], answer: "ACD" },
+  { id: 15, type: "multiple", question: "服务蓝图包含了三条分界线为（ ）", options: ["A. 顾客分界线", "B. 互动分界线", "C. 支持分界线", "D. 内部互动线", "E. 可视分界线"], answer: "BDE" },
+  { id: 16, type: "multiple", question: "生产运作管理的基本内容包括哪些？", options: ["A. 生产运作系统设计", "B. 生产运作运行", "C. 生产运作战略决策", "D. 新型生产经营方式"], answer: "ABCD" },
+  { id: 17, type: "multiple", question: "固定量系统就是（ ）都为固定的量的库存控制系统。", options: ["A. 订货量", "B. 订货提前期", "C. 订货点", "D. 采购时间间隔"], answer: "AC" },
+  { id: 18, type: "multiple", question: "根据对物品需求是否重复可将物品分为哪几种需求（ ）", options: ["A. 单周期需求", "B. 独立需求", "C. 多周期需求", "D. 相关需求"], answer: "AC" },
+  { id: 19, type: "multiple", question: "企业战略管理的过程包括（ ）。", options: ["A. 战略选择", "B. 战略分析", "C. 战略实施", "D. 战略决策", "E. 确定企业使命"], answer: "ABCE" },
+  { id: 20, type: "multiple", question: "生产运作系统的设计通常包括以下哪几个方面的策略？", options: ["A. 岗位设计", "B. 供需匹配", "C. 设施布局", "D. 企业选址", "E. 工作考核和报酬"], answer: "ACDE" },
+  { id: 21, type: "multiple", question: "下列企业中，选址时“靠近原材料产地”会成为核心考量的有（ ）", options: ["A. 制糖厂", "B. 服装厂", "C. 家具厂", "D. 面包店", "E. 炼油厂"], answer: "ACE" },
+  { id: 22, type: "multiple", question: "按生产产品或提供服务的驱动方式可将流程划分为（ ）", options: ["A. 流水作业流程", "B. 拉式流程", "C. 混合流程", "D. 推式流程", "E. 单件作业流程"], answer: "BCD" },
+  { id: 23, type: "multiple", question: "处理非均匀需求中改变需求的策略包括（ ）", options: ["A. 推迟交货", "B. 改变价格转移需求", "C. 顾客自助", "D. 开发预定系统"], answer: "ABD" },
+  { id: 24, type: "multiple", question: "企业的生产计划主要包括（ ）", options: ["A. 产品出产计划", "B. 资源能力计划", "C. 产品交付计划", "D. 综合生产计划"], answer: "ACD" },
+  { id: 25, type: "multiple", question: "影响设施布置的关键主导因素包括下列哪些（ ）", options: ["A. 产品结构和工艺特点", "B. 企业协作水平", "C. 企业技术水平", "D. 物料搬运成本", "E. 产品产量和服务规模"], answer: "ABCE" },
+  { id: 26, type: "judge", question: "运输公司属于顾客参与的服务生产。（ ）", options: ["A. 对", "B. 错"], answer: "B（错）" },
+  { id: 27, type: "judge", question: "生产运作管理的基本目标主要包括质量管理、成本管理及进度管理。（ ）", options: ["A. 对", "B. 错"], answer: "B（错）" },
+  { id: 28, type: "judge", question: "管理和调节产能的办法有改变劳动力数量、采取超售策略、开发预订（约）系统、形成可调节产能等。（ ）", options: ["A. 对", "B. 错"], answer: "B（错）" },
+  { id: 29, type: "judge", question: "固定量系统就是订货点和订货间隔都为固定量的库存控制系统。（ ）", options: ["A. 对", "B. 错"], answer: "B（错）" },
+  { id: 30, type: "judge", question: "订货型生产的生产效率较低。（ ）", options: ["A. 对", "B. 错"], answer: "B（错）" },
+  { id: 31, type: "judge", question: "MRP计算物料需求时，同一物料按其在各个BOM中的最高层次编码。（ ）", options: ["A. 对", "B. 错"], answer: "B（错）" },
+  { id: 32, type: "judge", question: "我们通常所说的“某电视机生产企业年产电视机多少台”，是按代表产品来计算的。（ ）", options: ["A. 对", "B. 错"], answer: "A（对）" },
+  { id: 33, type: "judge", question: "滚动计划的连续性和应变性好，但严肃性差。（ ）", options: ["A. 对", "B. 错"], answer: "B（错）" },
+  { id: 34, type: "judge", question: "库存是指存放在仓库里的物品。（ ）", options: ["A. 对", "B. 错"], answer: "B（错）" },
+  { id: 35, type: "judge", question: "查定能力为计划年度实际可达到的生产能力，是编制生产计划的依据。（ ）", options: ["A. 对", "B. 错"], answer: "B（错）" },
+  { id: 36, type: "judge", question: "某汽车生产厂有底盘车间、发动机车间，该厂是按照对象专业化原则组织的。（ ）", options: ["A. 对", "B. 错"], answer: "A（对）" },
+  { id: 37, type: "judge", question: "单周期库存控制中，若需求量小于订货量产生的单位超储费用Co，其计算公式为单位成本(c)减去单位处理费用(s)，且处理费用s只能是正值（如折价变卖）。（ ）", options: ["A. 对", "B. 错"], answer: "B（错）" },
+  { id: 38, type: "judge", question: "产品研发设计流程包括产品构思→产品可行性分析→产品功能设计→产品制造设计→产品设计审核→产品最终测试→产品进入市场及评估。（ ）", options: ["A. 对", "B. 错"], answer: "B（错）" },
+  { id: 39, type: "judge", question: "对于价格折扣模型，按照最低价求得的经济订货批量如果可行，则一定是最佳订货批量（即相应的总费用最低）。（ ）", options: ["A. 对", "B. 错"], answer: "A（对）" },
+  { id: 40, type: "judge", question: "订货点库存法是事先决定一个存货水平，当库存的消耗降到订货点时，就下单补货，使库存在用完前如期获得补充。（ ）", options: ["A. 对", "B. 错"], answer: "A（对）" }
+];
+
+// 学习通课程作业题库（按单元整理，共314题）
+const courseUnits = [
+  {
+    "name": "第一章客观测试题",
+    "questions": [
+      {
+        "id": 41,
+        "sourceNumber": 1,
+        "type": "single",
+        "question": "加工装配式生产的特点不包括(        )",
+        "options": [
+          "A. 生产连续性强、工艺柔性小",
+          "B. 生产设施地理位置相对分散",
+          "C. 产品由离散零配件装配而成",
+          "D. 设备柔性较高"
+        ],
+        "answer": "A",
+        "analysis": "加工装配式生产的特点包括产品由离散零配件装配而成、生产设施地理位置相对分散、设备柔性较高等;而“生产连续性强、工艺柔性小”是流程式生产的特点。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 42,
+        "sourceNumber": 2,
+        "type": "single",
+        "question": "运作管理的核心是实现(        )",
+        "options": [
+          "A. 低耗运营",
+          "B. 准时交付",
+          "C. 高效生产",
+          "D. 价值增值"
+        ],
+        "answer": "D",
+        "analysis": "运作管理是对企业提供产品或服务的生产运作系统进行设计、运行与维护的各种管理活动的总称，其核心是实现价值增值。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 43,
+        "sourceNumber": 3,
+        "type": "single",
+        "question": "按主要生产要素划分，纺织服装行业属于(        )",
+        "options": [
+          "A. 知识密集型产业",
+          "B. 资源密集型产业",
+          "C. 劳动密集型产业",
+          "D. 资本密集型产业"
+        ],
+        "answer": "C",
+        "analysis": "劳动密集型产业的例子包括纺织服装、玩具制造等，其特点是主要依靠大量使用劳动力，对技术和设备依赖程度低。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 44,
+        "sourceNumber": 4,
+        "type": "single",
+        "question": "按照生产的重复程度划分，船舶制造属于(        )",
+        "options": [
+          "A. 大量大批生产",
+          "B. 中批生产",
+          "C. 流程式生产",
+          "D. 单件小批生产"
+        ],
+        "answer": "D",
+        "analysis": "单件小批生产包括船舶、飞机等大型机电设备的生产。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 45,
+        "sourceNumber": 5,
+        "type": "single",
+        "question": "下列属于流程式生产的行业例子是(        )",
+        "options": [
+          "A. 汽车制造",
+          "B. 服装生产",
+          "C. 化工生产",
+          "D. 家具制造"
+        ],
+        "answer": "C",
+        "analysis": "化工属于流程式生产行业，而汽车制造、服装生产、家具制造属于加工装配式生产行业。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 46,
+        "sourceNumber": 6,
+        "type": "single",
+        "question": "数字化时代企业运营管理发展的新趋势不包括(        )",
+        "options": [
+          "A. 流水线生产的普及",
+          "B. “互联网+”模式融入",
+          "C. 智能制造兴起",
+          "D. 数据驱动运营决策"
+        ],
+        "answer": "A",
+        "analysis": "数字化时代企业运营管理新趋势包括“互联网+”模式融入、智能制造兴起、数字技术赋能、数据驱动运营决策，手工生产普及不属于新趋势。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 47,
+        "sourceNumber": 7,
+        "type": "single",
+        "question": "下列哪项不属于大量生产运作?(        )",
+        "options": [
+          "A. 中小学教育",
+          "B. 飞机制造",
+          "C. 汽车制造",
+          "D. 学生入学体检",
+          "E. 快餐"
+        ],
+        "answer": "B",
+        "analysis": "飞机制造属于单件小批生产",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 48,
+        "sourceNumber": 8,
+        "type": "single",
+        "question": "组织的三大基本职能不包括(        )",
+        "options": [
+          "A. 人事管理",
+          "B. 营销管理",
+          "C. 运作管理",
+          "D. 财务管理"
+        ],
+        "answer": "A",
+        "analysis": "组织的三大基本职能是运作、营销和理财。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 49,
+        "sourceNumber": 9,
+        "type": "single",
+        "question": "在现代企业生产与运作系统中，与企业相互依赖，已被看作为重要组成部分的是(        )。",
+        "options": [
+          "A. 零售商",
+          "B. 用户",
+          "C. 供应商",
+          "D. 生产对象"
+        ],
+        "answer": "C",
+        "analysis": "供应商作为提供输入资源的重要主体，与企业相互依赖并成为系统重要组成部分",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 50,
+        "sourceNumber": 10,
+        "type": "single",
+        "question": "下列属于订货型生产(MTO)的特点是(        )",
+        "options": [
+          "A. 多采用专用高效设备",
+          "B. 产品需求稳定",
+          "C. 推动式生产",
+          "D. 订单驱动"
+        ],
+        "answer": "D",
+        "analysis": "订货型生产(MTO)是拉动式、订单驱动的生产，产品需求波动大、难以预测，多采用通用设备，而“推动式生产”“产品需求稳定”“多采用专用高效设备”是备货型生产(MTS)的特点。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 51,
+        "sourceNumber": 11,
+        "type": "single",
+        "question": "服务的特点中，“服务的需求具有时效性，淡季多余服务能力不能储存” 指的是(        )",
+        "options": [
+          "A. 异质性",
+          "B. 同步性",
+          "C. 易逝性",
+          "D. 无形性"
+        ],
+        "answer": "C",
+        "analysis": "服务的易逝性定义为:服务的需求具有时效性，淡季时多余的服务能力不能储存起来应对旺季时顾客的高峰需求。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 52,
+        "sourceNumber": 12,
+        "type": "single",
+        "question": "生产与运营活动是(        )",
+        "options": [
+          "A. 信息反馈与管理提升过程",
+          "B. 投入—转换—产出过程",
+          "C. 产出最终产品",
+          "D. 投入资源要素"
+        ],
+        "answer": "B",
+        "analysis": "运作活动是“把输入资源转化为有用输出”的投入—变换—产出过程，涵盖完整转化环节。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 53,
+        "sourceNumber": 13,
+        "type": "single",
+        "question": "相对于流程式生产，加工装配式生产的特点是:(        )",
+        "options": [
+          "A. 有较多标准产品",
+          "B. 资本密集",
+          "C. 品种数较多",
+          "D. 设备柔性较低"
+        ],
+        "answer": "C",
+        "analysis": "加工装配式生产通常产品品种数较多。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 54,
+        "sourceNumber": 14,
+        "type": "single",
+        "question": "1913年哪家公司的T型汽车生产移动式装配流水线是生产管理中的一块里程碑?(        )",
+        "options": [
+          "A. 德国奔驰公司",
+          "B. 美国福特公司",
+          "C. 美国通用公司",
+          "D. 日本丰田公司"
+        ],
+        "answer": "B",
+        "analysis": "福特的流水线生产方式是大规模生产的里程碑",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 55,
+        "sourceNumber": 15,
+        "type": "single",
+        "question": "以下哪项不是服务运作的特点?(        )",
+        "options": [
+          "A. 生产率难以确定",
+          "B. 纯服务不能通过库存调节",
+          "C. 质量标准难以建立",
+          "D. 与顾客接触",
+          "E. 服务过程可以与消费过程分离"
+        ],
+        "answer": "E",
+        "analysis": "服务过程与消费过程分离是制造业特征",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 56,
+        "sourceNumber": 16,
+        "type": "single",
+        "question": "备货型生产(MTS)的特点是(        )",
+        "options": [
+          "A. 订单驱动",
+          "B. 拉动式生产",
+          "C. 预测驱动",
+          "D. 交货期重要"
+        ],
+        "answer": "C",
+        "analysis": "备货型生产(MTS)是预测驱动的生产，属于推动式，价格事先确定，交货期不重要，加工对象标准化程度高。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 57,
+        "sourceNumber": 17,
+        "type": "single",
+        "question": "按照生产要素密集程度和与顾客接触程度划分，医院属于(        )",
+        "options": [
+          "A. 大量劳动密集服务",
+          "B. 专业劳动密集服务",
+          "C. 大量资本密集服务",
+          "D. 专业资本密集服务"
+        ],
+        "answer": "D",
+        "analysis": "医院属于专业资本密集服务，需专业设备且资本投入较高。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 58,
+        "sourceNumber": 18,
+        "type": "single",
+        "question": "组织的三大基本职能不包括(        )",
+        "options": [
+          "A. 营销",
+          "B. 运作",
+          "C. 人事",
+          "D. 理财"
+        ],
+        "answer": "C",
+        "analysis": "组织的三大基本职能是运作、营销和理财。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 59,
+        "sourceNumber": 19,
+        "type": "single",
+        "question": "多品种生产是生产与运作过程(        )的体现",
+        "options": [
+          "A. 连续性",
+          "B. 目标性",
+          "C. 柔性",
+          "D. 比例性"
+        ],
+        "answer": "C",
+        "analysis": "“柔性”指适应多品种、个性化需求的能力，多品种生产正是柔性的核心体现。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 60,
+        "sourceNumber": 20,
+        "type": "single",
+        "question": "制造性生产与服务性运作的区别不包括(        )",
+        "options": [
+          "A. 产出物质形态不同",
+          "B. 顾客参与程度不同",
+          "C. 对技术依赖程度不同",
+          "D. 质量标准及度量方式不同"
+        ],
+        "answer": "C",
+        "analysis": "制造性生产与服务性运作的区别，包括产出物质形态、顾客参与程度、对顾客需求响应时间、运作场所集中度和规模、质量标准及度量方式、运营基本组织方式等，对技术依赖程度不同不在其中。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 61,
+        "sourceNumber": 21,
+        "type": "multiple",
+        "question": "泰勒通过哪些著名的实验总结了称为“科学管理”的一套思想?(        )",
+        "options": [
+          "A. 霍桑实验",
+          "B. 切削实验",
+          "C. 铁铲实验",
+          "D. 搬运实验"
+        ],
+        "answer": "BCD",
+        "analysis": "霍桑实验是梅奥的研究",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 62,
+        "sourceNumber": 22,
+        "type": "multiple",
+        "question": "生产运作管理的基本问题包括哪些?(        )",
+        "options": [
+          "A. 如何保证适时适量将产品投放市场",
+          "B. 如何打败竞争对手",
+          "C. 如何保证和提高质量",
+          "D. 如何使产品的价格为顾客接受"
+        ],
+        "answer": "ACD",
+        "analysis": "运作管理的基本问题围绕质量、交货期、成本展开",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 63,
+        "sourceNumber": 23,
+        "type": "multiple",
+        "question": "运作管理发展的主要理论包括(        )",
+        "options": [
+          "A. 梅奥的霍桑实验",
+          "B. 泰勒的科学管理理论",
+          "C. 准时化生产(JIT)",
+          "D. 福特的流水线生产方式"
+        ],
+        "answer": "ABCD",
+        "analysis": "上述选项均属于运作管理发展的主要理论。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 64,
+        "sourceNumber": 24,
+        "type": "multiple",
+        "question": "与订货生产型比较，属于备货性生产类型的特点主要有(        )。",
+        "options": [
+          "A. 标准产品",
+          "B. 产品需求基本无法预测",
+          "C. 以通用设备加工为主",
+          "D. 价格事先确定",
+          "E. 生产与运作管理难度相对小一些"
+        ],
+        "answer": "ADE",
+        "analysis": "备货型生产是标准产品，用专用设备，需求可预测，价格事先确定，管理难度小;订货型生产用通用设备。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 65,
+        "sourceNumber": 25,
+        "type": "multiple",
+        "question": "按企业接受订货的方式和顾客要求定制的程度，可将制造性生产划分为 (        )。",
+        "options": [
+          "A. 加工装配性生产",
+          "B. 流程性生产",
+          "C. 订货性生产",
+          "D. 备货性生产"
+        ],
+        "answer": "CD",
+        "analysis": "流程性和加工装配性是按工艺划分的类型",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 66,
+        "sourceNumber": 26,
+        "type": "multiple",
+        "question": "下列关于单件小批生产的特点说明正确的是(        )。",
+        "options": [
+          "A. 按用户要求设计",
+          "B. 计划管理工作复杂、多变",
+          "C. 要求工人技术水平很高",
+          "D. 按对象原则、采用流水生产或自动线"
+        ],
+        "answer": "ABC",
+        "analysis": "对象专业化一般适用于大批量生产方式",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 67,
+        "sourceNumber": 27,
+        "type": "multiple",
+        "question": "下列关于制造业与服务业的区别说法正确的是(        )。",
+        "options": [
+          "A. 制造业强调人的因素相对重要，服务业强调人的因素十分重要",
+          "B. 制造业主要产出有形产品，服务业主要提供无形产品",
+          "C. 制造业的产品可以运送，服务业通常很难运送",
+          "D. 制造业的销售是服务提供的一个组成部分，服务业的销售与生产分离"
+        ],
+        "answer": "ABC",
+        "analysis": "制造业销售与生产分离，服务业销售是服务的组成部分",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 68,
+        "sourceNumber": 28,
+        "type": "multiple",
+        "question": "按照生产工艺特征，制造性生产可划分为(        )",
+        "options": [
+          "A. 订货型生产",
+          "B. 备货型生产",
+          "C. 加工装配式生产",
+          "D. 流程式生产"
+        ],
+        "answer": "CD",
+        "analysis": "按照生产工艺特征，制造性生产划分为流程式生产和加工装配式生产;备货型生产和订货型生产是按照生产驱动因素划分的类型。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 69,
+        "sourceNumber": 29,
+        "type": "multiple",
+        "question": "下列属于流程式生产的是(        )",
+        "options": [
+          "A. 服装",
+          "B. 汽车",
+          "C. 手机",
+          "D. 制药",
+          "E. 啤酒"
+        ],
+        "answer": "DE",
+        "analysis": "服装、手机、汽车属于加工装配式生产。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 70,
+        "sourceNumber": 30,
+        "type": "multiple",
+        "question": "服务的特点包括(        )",
+        "options": [
+          "A. 异质性",
+          "B. 无形性",
+          "C. 易逝性",
+          "D. 同步性"
+        ],
+        "answer": "ABCD",
+        "analysis": "服务的特点包括无形性、同步性(不可分离性)、异质性(波动性)、易逝性。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 71,
+        "sourceNumber": 31,
+        "type": "multiple",
+        "question": "数字化时代企业运营管理发展的新趋势包括(        )",
+        "options": [
+          "A. 智能制造的兴起",
+          "B. 数字技术的赋能",
+          "C. “互联网+”模式的融入",
+          "D. 数据驱动的运营决策"
+        ],
+        "answer": "ABCD",
+        "analysis": "数字化时代企业运营管理的新趋势包括上述四个选项的内容。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 72,
+        "sourceNumber": 32,
+        "type": "multiple",
+        "question": "人们认为服务最突出的特征包括(        )。",
+        "options": [
+          "A. 服务产品的无形性",
+          "B. 服务质量容易评定",
+          "C. 生产与消费的同步性",
+          "D. 不可存储性"
+        ],
+        "answer": "ACD",
+        "analysis": "服务质量难以统一评定",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 73,
+        "sourceNumber": 33,
+        "type": "multiple",
+        "question": "与加工装配生产比较，连续式生产的突出特征有(        )。",
+        "options": [
+          "A. 生产能力可明确规定",
+          "B. 产品品种数较少",
+          "C. 能源消耗较高",
+          "D. 在制品库存较多"
+        ],
+        "answer": "ABC",
+        "analysis": "流程式(连续式)生产品种少，生产能力明确，装备密集故能耗高;加工装配式在制品库存较多。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 74,
+        "sourceNumber": 34,
+        "type": "multiple",
+        "question": "根据各类社会组织生产特征的不同，生产运作可以归纳为以下两种类型(        )。",
+        "options": [
+          "A. 制造性运作",
+          "B. 科学性运作",
+          "C. 服务性运作",
+          "D. 艺术性运作"
+        ],
+        "answer": "AC",
+        "analysis": "生产运作按产出特征分为制造性运作和服务性运作，这是最基本的分类方式",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 75,
+        "sourceNumber": 35,
+        "type": "multiple",
+        "question": "生产运作管理的基本内容包括哪些?(        )",
+        "options": [
+          "A. 生产运作系统设计",
+          "B. 生产运作运行",
+          "C. 生产运作战略决策",
+          "D. 新型生产经营方式"
+        ],
+        "answer": "ABCD",
+        "analysis": "运作管理的内容包括战略决策、系统设计、运行控制及新型经营方式探索",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 76,
+        "sourceNumber": 36,
+        "type": "judge",
+        "question": "生产运作是使一定的原材料转化为一定的有形产品的过程。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "运作管理包括有形产品生产和无形服务提供，并非仅转化为有形产品。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 77,
+        "sourceNumber": 37,
+        "type": "judge",
+        "question": "加工装配式生产也叫离散性生产。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "加工装配式生产又称离散性生产，指物料离散运动并形成产品的生产方式。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 78,
+        "sourceNumber": 38,
+        "type": "judge",
+        "question": "服务业生产率的测量要比制造业容易。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "服务业产出无形、质量难量化，生产率测量难度远高于制造业",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 79,
+        "sourceNumber": 39,
+        "type": "judge",
+        "question": "制造性生产的产出是有形产品，可通过库存调节供需;服务性运作的产出是无形服务，纯服务无法通过库存调节供需。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "二者在产出物质形态上的区别:有形产品可利用库存调节，无形服务无法利用库存调节。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 80,
+        "sourceNumber": 40,
+        "type": "judge",
+        "question": "备货型生产(MTS)是订单驱动的拉动式生产。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "备货型生产(MTS)是预测驱动的推动式生产;订单驱动的拉动式生产是订货型生产(MTO)的特点。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 81,
+        "sourceNumber": 41,
+        "type": "judge",
+        "question": "流程式生产的工艺柔性较大，设备地理位置相对分散。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "流程式生产的工艺柔性比较小，设备地理位置相对集中;而工艺柔性大、设备分散是加工装配式生产的特点。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 82,
+        "sourceNumber": 42,
+        "type": "judge",
+        "question": "有什么样的原材料就制造什么样的产品，是输入决定了输出。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "运作管理的特征是“输出决定输入”。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 83,
+        "sourceNumber": 43,
+        "type": "judge",
+        "question": "运输公司属于顾客参与的服务生产。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "运输公司属于专业技术性较强的工作，一般顾客是不需要参与的。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 84,
+        "sourceNumber": 44,
+        "type": "judge",
+        "question": "生产运作、营销和财务三大职能在大多数的组织中都互不相干地运作。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "组织三大基本职能相互依存、相辅相成又相互制约",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 85,
+        "sourceNumber": 45,
+        "type": "judge",
+        "question": "服务业不仅制造产品，而且往往还要消耗产品，因此服务业不创造价值。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "服务业通过提供无形服务实现价值增值，是社会价值创造的重要环节",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 86,
+        "sourceNumber": 46,
+        "type": "judge",
+        "question": "纯服务业不能通过库存调节供需矛盾。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "纯服务业的产品具有不可储存性。服务的生产与消费往往同时发生，无法像实物商品那样通过库存积压或提前储备来应对需求波动",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 87,
+        "sourceNumber": 47,
+        "type": "judge",
+        "question": "组织的三大基本职能是运作、营销和人事。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "组织的三大基本职能是运作、营销和理财，人事不属于三大基本职能。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 88,
+        "sourceNumber": 48,
+        "type": "judge",
+        "question": "生产运作管理的基本目标主要包括质量管理、成本管理及进度管理。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "生产运作管理的目标包括高效、低耗、灵活、清洁、准时",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 89,
+        "sourceNumber": 49,
+        "type": "judge",
+        "question": "运营管理是对运作系统的设计、运行、维护与改善，主要是对运作活动进行计划、组织与控制。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "运营管理涵盖运作系统的设计、运行等，核心是对运作活动的计划、组织、领导和控制。",
+        "unit": "第一章客观测试题"
+      },
+      {
+        "id": 90,
+        "sourceNumber": 50,
+        "type": "judge",
+        "question": "订货型生产的生产效率较低。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "订货型生产根据客户订单的需求定制产品，生产效率较高。",
+        "unit": "第一章客观测试题"
+      }
+    ]
+  },
+  {
+    "name": "第二章客观测试题",
+    "questions": [
+      {
+        "id": 91,
+        "sourceNumber": 1,
+        "type": "single",
+        "question": "以下(        )是公司战略。",
+        "options": [
+          "A.\n\n多元化",
+          "B.\n\n以上都不是",
+          "C.\n\n成本领先",
+          "D.\n\n集中化",
+          "E.\n\n差异化"
+        ],
+        "answer": "A",
+        "analysis": "多元化是企业整体发展方向的选择，属于公司级战略;其它选项属于竞争战略。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 92,
+        "sourceNumber": 2,
+        "type": "single",
+        "question": "波特的低成本制造，产品差异和市场集中属于(        )。",
+        "options": [
+          "A.\n\n职能级战略",
+          "B.\n\n生产运作战略",
+          "C.\n\n部门级战略",
+          "D.\n\n公司级战略"
+        ],
+        "answer": "C",
+        "analysis": "波特的三大竞争战略(低成本、差异化、集中化)属于业务部门层级的竞争策略。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 93,
+        "sourceNumber": 3,
+        "type": "single",
+        "question": "下列反映了基于时间的竞争思想是(        )。",
+        "options": [
+          "A.\n\n把资源集中在最具有经济效益的生产活动中",
+          "B.\n\n把生产转移到低工资的国家",
+          "C.\n\n兴建新的设施",
+          "D.\n\n弹性制造、快速反应等"
+        ],
+        "answer": "D",
+        "analysis": "基于时间的竞争强调快速响应与灵活性，弹性制造和快速反应直接体现这一思想。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 94,
+        "sourceNumber": 4,
+        "type": "single",
+        "question": "20世纪60年代产品竞争的焦点(        )。",
+        "options": [
+          "A.\n\n时间",
+          "B.\n\n成本",
+          "C.\n\n市场",
+          "D.\n\n质量"
+        ],
+        "answer": "B",
+        "analysis": "20世纪60年代产品竞争主要聚焦于控制成本以获取价格优势，所以焦点是成本。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 95,
+        "sourceNumber": 5,
+        "type": "single",
+        "question": "商场不等于战场，是因为(        )。",
+        "options": [
+          "A.\n\n要运用战略",
+          "B.\n\n要战胜竞争对手",
+          "C.\n\n既要竞争，又要合作",
+          "D.\n\n以上都是",
+          "E.\n\n要争夺市场份额"
+        ],
+        "answer": "C",
+        "analysis": "现代商业强调竞合关系(如供应链合作)，区别于战场纯粹的零和博弈。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 96,
+        "sourceNumber": 6,
+        "type": "single",
+        "question": "生产运作战略属于(        )。",
+        "options": [
+          "A.\n\n部门级战略",
+          "B.\n\n职能级战略",
+          "C.\n\n以上都不是",
+          "D.\n\n公司级战略"
+        ],
+        "answer": "B",
+        "analysis": "生产运作战略支撑部门级战略，属于具体的职能层面(如生产、营销)。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 97,
+        "sourceNumber": 7,
+        "type": "single",
+        "question": "以下(        )是事业部战略。",
+        "options": [
+          "A.\n\n垂直一体化",
+          "B.\n\n成本领先",
+          "C.\n\n相关多元化",
+          "D.\n\n不相关多元化",
+          "E.\n\n水平一体化"
+        ],
+        "answer": "B",
+        "analysis": "成本领先是波特的三大竞争战略之一，属于事业部战略;其它选项属公司级战略。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 98,
+        "sourceNumber": 8,
+        "type": "single",
+        "question": "对选定的细分市场进行专业化生产和服务属于(        )战略。",
+        "options": [
+          "A.\n\n差异化",
+          "B.\n\n专一化/聚焦",
+          "C.\n\n专业化",
+          "D.\n\n一体化"
+        ],
+        "answer": "B",
+        "analysis": "专一化战略针对特定细分市场提供专业化服务，是波特的集中战略体现。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 99,
+        "sourceNumber": 9,
+        "type": "single",
+        "question": "对公司的总的方向和基本特点起作用的战略是(        )。",
+        "options": [
+          "A.\n\n临时的",
+          "B.\n\n短期的",
+          "C.\n\n中期的",
+          "D.\n\n以上都不是",
+          "E.\n\n长期的"
+        ],
+        "answer": "E",
+        "analysis": "长期战略决定公司总体走向和基本特质。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 100,
+        "sourceNumber": 10,
+        "type": "single",
+        "question": "低层决策被称为(        )。",
+        "options": [
+          "A.\n\n操作决策",
+          "B.\n\n战术决策",
+          "C.\n\n预测",
+          "D.\n\n设计决策",
+          "E.\n\n战略决策"
+        ],
+        "answer": "A",
+        "analysis": "低层决策侧重具体日常事务的执行，即操作决策。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 101,
+        "sourceNumber": 11,
+        "type": "single",
+        "question": "SWOT 分析包括(        )。",
+        "options": [
+          "A.\n\n提出不同组合下的策略",
+          "B.\n\n外部分析:识别机会和威胁",
+          "C.\n\n以上都包括",
+          "D.\n\n内部分析:发现优势和劣势"
+        ],
+        "answer": "C",
+        "analysis": "SWOT分析包含内外部环境评估(优势/劣势、机会/威胁)及策略制定。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 102,
+        "sourceNumber": 12,
+        "type": "single",
+        "question": "企业能够适应市场变化，很快地从生产一种产品或提供一种服务转向生产另一种产品或提供另一种服务的能力，被称之为(        )。",
+        "options": [
+          "A.\n\n高柔性",
+          "B.\n\n高效率",
+          "C.\n\n高质量",
+          "D.\n\n高可靠性"
+        ],
+        "answer": "A",
+        "analysis": "柔性指企业快速切换生产或服务的能力，以适应市场需求变化。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 103,
+        "sourceNumber": 13,
+        "type": "single",
+        "question": "创造一种使顾客感到是独一无二的产品或者服务，使消费者感到物有所值，从而愿意支付较高的价格的是(        )战略。",
+        "options": [
+          "A.\n\n专业化",
+          "B.\n\n多元化",
+          "C.\n\n差异化",
+          "D.\n\n低成本"
+        ],
+        "answer": "C",
+        "analysis": "差异化战略通过独特的产品/服务吸引顾客，使其愿意支付溢价。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 104,
+        "sourceNumber": 14,
+        "type": "multiple",
+        "question": "企业战略管理的过程包括(        )。",
+        "options": [
+          "A.\n\n战略实施",
+          "B.\n\n战略选择",
+          "C.\n\n确定企业使命",
+          "D.\n\n战略分析",
+          "E.\n\n战略决策"
+        ],
+        "answer": "ABCD",
+        "analysis": "核心环节为明确使命→分析环境→选择战略→实施落地，D项“战略决策”属于“战略选择”的子步骤，故排除。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 105,
+        "sourceNumber": 15,
+        "type": "multiple",
+        "question": "波特的三种竞争战略包括(        )。",
+        "options": [
+          "A.\n\n专业化战略",
+          "B.\n\n聚焦战略",
+          "C.\n\n总成本领先战略",
+          "D.\n\n差异化战略",
+          "E.\n\n多元化战略"
+        ],
+        "answer": "BCD",
+        "analysis": "E项多元化属公司层战略。三大基础战略:成本优势、差异化、细分市场聚焦。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 106,
+        "sourceNumber": 16,
+        "type": "multiple",
+        "question": "运用 SWOT 分析可以帮助企业明确以下哪几个方面?(        )",
+        "options": [
+          "A.\n\n劣势",
+          "B.\n\n机会",
+          "C.\n\n威胁",
+          "D.\n\n优势",
+          "E.\n\n使命"
+        ],
+        "answer": "ABCD",
+        "analysis": "聚焦 内部优劣势(S/W)+外部机会威胁(O/T)，E项“使命”是企业目标设定，非SWOT分析内容。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 107,
+        "sourceNumber": 17,
+        "type": "multiple",
+        "question": "影响企业竞争力的主要因素包括(        )。",
+        "options": [
+          "A.\n\n服务",
+          "B.\n\n时间",
+          "C.\n\n质量",
+          "D.\n\n价格",
+          "E.\n\n品种"
+        ],
+        "answer": "ABCDE",
+        "analysis": "企业竞争力五维度:性价比、产品多样性、服务质量、交付效率(时间)。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 108,
+        "sourceNumber": 18,
+        "type": "multiple",
+        "question": "企业战略的层次包括(        )。",
+        "options": [
+          "A.\n\n职能战略",
+          "B.\n\n事业部战略",
+          "C.\n\n运营战略",
+          "D.\n\n营销战略",
+          "E.\n\n公司层战略"
+        ],
+        "answer": "ABE",
+        "analysis": "标准划分为公司总体战略→业务单元战略→职能支撑战略，C、D(运营/营销战略)属于职能战略的具体类型，非独立层级。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 109,
+        "sourceNumber": 19,
+        "type": "multiple",
+        "question": "生产运作系统的设计通常包括以下哪几个方面的策略?(        )",
+        "options": [
+          "A.\n\n设施布置",
+          "B.\n\n岗位设计",
+          "C.\n\n供需匹配",
+          "D.\n\n企业选址",
+          "E.\n\n工作考核和报酬"
+        ],
+        "answer": "ABDE",
+        "analysis": "E项供需匹配属运营调度，非系统设计范畴。\n三、判断题",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 110,
+        "sourceNumber": 20,
+        "type": "multiple",
+        "question": "企业在选择产品和服务时需要考虑哪些因素?(        )",
+        "options": [
+          "A.\n\n市场需求与客户需求",
+          "B.\n\n成本与效益",
+          "C.\n\n供应链与生产能力",
+          "D.\n\n合规性与可持续性",
+          "E.\n\n竞争对手的广告策略"
+        ],
+        "answer": "ABCD",
+        "analysis": "B项对手广告属战术层面，非核心决策因素。关键聚焦客户需求、内部能力、经济性、合规性四大维度。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 111,
+        "sourceNumber": 21,
+        "type": "multiple",
+        "question": "生产运作策略主要包括以下哪些内容?(        )",
+        "options": [
+          "A.\n\n生产运作系统的设计",
+          "B.\n\n生产运作的总体策略",
+          "C.\n\n人力资源规划",
+          "D.\n\n企业运营",
+          "E.\n\n产品或服务的选择.开发与设计"
+        ],
+        "answer": "ABE",
+        "analysis": "D项企业运营/E项人力规划属执行层，非策略核心。策略三核心方向定位、产品设计、系统架构。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 112,
+        "sourceNumber": 22,
+        "type": "multiple",
+        "question": "企业的宏观外部环境主要包括(        )。",
+        "options": [
+          "A.\n\n政治",
+          "B.\n\n技术",
+          "C.\n\n经济",
+          "D.\n\n社会",
+          "E.\n\n地理位置"
+        ],
+        "answer": "ABCD",
+        "analysis": "E项地理位置属微观环境或具体运营因素。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 113,
+        "sourceNumber": 23,
+        "type": "multiple",
+        "question": "以下哪些是属于公司战略?(        )",
+        "options": [
+          "A.\n\n横向一体化",
+          "B.\n\n专业化",
+          "C.\n\n集中一点",
+          "D.\n\n差异化",
+          "E.\n\n多元化"
+        ],
+        "answer": "ABE",
+        "analysis": "C项差异化属业务层竞争战略;E项集中一点属业务层。公司战略聚焦业务范围选择专业化/一体化/多元化。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 114,
+        "sourceNumber": 24,
+        "type": "judge",
+        "question": "SWOT分析法是由美国著名管理学家安索夫和安德鲁斯提出的用于战略分析的实用方法，全面分析企业的优势(S)、劣势(W)、机会(O)、威胁(T)四种因素，以选择适宜的战略加以实施。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "SWOT由安索夫等提出，系统评估内外部四维度以制定战略。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 115,
+        "sourceNumber": 25,
+        "type": "judge",
+        "question": "替代品威胁仅仅指其他同行业企业提供的不同品牌的同类产品。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "替代品威胁指的是来自其他行业的、能够满足客户同样核心需求的产品或服务。例如，对咖啡行业而言，替代品是茶、能量饮料等，而非其他品牌的咖啡。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 116,
+        "sourceNumber": 26,
+        "type": "judge",
+        "question": "企业使命是指企业生产经营的总方向、总目的、总特征和总的指导思想。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "企业使命定义为根本方向与存在意义。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 117,
+        "sourceNumber": 27,
+        "type": "judge",
+        "question": "企业在制定运营战略时，运营目标的设定可以较为宽泛，不必过于具体和可度量，因为这样可以给员工更多的发挥空间。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "运营目标需具体可量化(如成本降10%)，宽泛目标易导致执行偏差。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 118,
+        "sourceNumber": 28,
+        "type": "judge",
+        "question": "自制还是外购，不是生产运作战略要考虑的。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "自制外购决策是生产战略核心内容(供应链自主性权衡)。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 119,
+        "sourceNumber": 29,
+        "type": "judge",
+        "question": "事业部战略又称经营战略。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "事业部战略即业务单元层面的 经营战略(如市场定位、竞争方式)。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 120,
+        "sourceNumber": 30,
+        "type": "judge",
+        "question": "当质量成为影响需求的主要因素时，降低成本就没有意义了。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "质量主导时仍需成本控制(避免过度投入导致盈利下降)。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 121,
+        "sourceNumber": 31,
+        "type": "judge",
+        "question": "基于时间竞争战略的焦点在缩短对顾客响应的时间上。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "时间竞争战略核心就是快速响应顾客需求，缩短响应时间以获取竞争优势。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 122,
+        "sourceNumber": 32,
+        "type": "judge",
+        "question": "我们通常用波特的五力模型来分析企业的内部环境。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "波特五力模型分析行业竞争环境(外部)，非企业内部。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 123,
+        "sourceNumber": 33,
+        "type": "judge",
+        "question": "战略管理是以全局为对象，根据总体发展需要而制定、实施和控制战略规划及具体措施的过程。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "管理对象的全局性。战略管理是以全局为对象，根据总体发展需要而制定、实施和控制战略规划及具体措施的过程。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 124,
+        "sourceNumber": 34,
+        "type": "judge",
+        "question": "实现低成本是获得企业竞争力的最重要途径。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "实现低成本是获得企业竞争力的重要途径，但不是最重要的途径。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 125,
+        "sourceNumber": 35,
+        "type": "judge",
+        "question": "运营战略与商业模式之间没有区别。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "运营战略聚焦内部执行(效率/流程)，商业模式定义价值创造逻辑(盈利/客户关系)，本质不同。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 126,
+        "sourceNumber": 36,
+        "type": "judge",
+        "question": "质量、成本、交货期这三个生产运作管理的基本问题的优先地位是随时间和企业的战略而变化的。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "企业不同发展阶段和战略下，对质量、成本、交货期的侧重会动态调整，所以优先地位变化。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 127,
+        "sourceNumber": 37,
+        "type": "judge",
+        "question": "当价格是影响需求的主要因素时，就出现了基于成本的竞争。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "价格敏感市场需成本领先战略(薄利多销竞争模式)。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 128,
+        "sourceNumber": 38,
+        "type": "judge",
+        "question": "竞争战略往往比公司战略低一个层次，故不需高级管理者来做出选择。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "竞争战略虽属业务层，但 需高管决策(如差异化/成本领先影响企业全局)。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 129,
+        "sourceNumber": 39,
+        "type": "judge",
+        "question": "生产运作战略是一种职能战略。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "运营战略属职能层支撑战略(服务于公司/业务层目标)。",
+        "unit": "第二章客观测试题"
+      },
+      {
+        "id": 130,
+        "sourceNumber": 40,
+        "type": "judge",
+        "question": "数字化时代下，企业的核心资源已完全转变为数据和信息，传统的物质资源不再重要。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "数据和信息成为“最为重要和宝贵”的资源要素，但这并不意味着传统的物质资源(如资金、设备、原材料等)“不再重要”。企业仍需合理配置和使用各种资源，数据和信息是在原有资源基础上新增的关键要素，而不是完全取代。",
+        "unit": "第二章客观测试题"
+      }
+    ]
+  },
+  {
+    "name": "第三四五章客观习题测试",
+    "questions": [
+      {
+        "id": 131,
+        "sourceNumber": 1,
+        "type": "single",
+        "question": "在办公室布局设计中常用的布置方法是(        )。",
+        "options": [
+          "A. 工序最优法",
+          "B. 作业相关图法",
+          "C. 物料流向法",
+          "D. 从一至表法"
+        ],
+        "answer": "B",
+        "analysis": "作业相关图法适用于办公室布局设计。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 132,
+        "sourceNumber": 2,
+        "type": "single",
+        "question": "在标准的流程图符号中，菱形符号通常代表什么含义?(        )",
+        "options": [
+          "A. 具体操作或任务步骤",
+          "B. 流程的开始或结束",
+          "C. 一个决策点或判断分支",
+          "D. 文档或报告的生成"
+        ],
+        "answer": "C",
+        "analysis": "本题考查流程图的基本符号。流程图有一套国际通用的标准化符号:椭圆代表开始/结束，矩形代表操作/任务，菱形代表判断/决策，箭头代表流向。文档通常用一个矩形加下方波浪线的符号表示。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 133,
+        "sourceNumber": 3,
+        "type": "single",
+        "question": "价值流图分析(VSM)的核心作用是?(        )",
+        "options": [
+          "A. 识别非增值活动与浪费",
+          "B. 提升员工技能",
+          "C. 增加生产批量",
+          "D. 优化设备布局"
+        ],
+        "answer": "A",
+        "analysis": "VSM通过可视化物料流和信息流，定位等待、搬运等浪费环节，为精益改善提供依据。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 134,
+        "sourceNumber": 4,
+        "type": "single",
+        "question": "固定布置是将(        )固定在一个位置。",
+        "options": [
+          "A. 制造对象",
+          "B. 人",
+          "C. 工具、设备",
+          "D. 材料"
+        ],
+        "answer": "A",
+        "analysis": "固定布置是一种生产布局方式，其中制造对象(如大型设备、建筑物)固定在一个位置，而人员、材料和工具围绕它移动。这种布置方式适用于大型、重型或不可移动的制造对象，如飞机、船舶、建筑等。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 135,
+        "sourceNumber": 5,
+        "type": "single",
+        "question": "一家专注于人工智能芯片研发的高科技初创公司正在为其总部和核心研发中心选址。以下哪个因素最可能主导其选址决策?(        )",
+        "options": [
+          "A. 拥有顶尖大学、研究机构和相关专业人才聚集地",
+          "B. 完善的基础设施(如交通、电力、网络)",
+          "C. 土地购置成本低廉",
+          "D. 靠近主要原材料供应商"
+        ],
+        "answer": "A",
+        "analysis": "科技类企业选址通常聚集在创新园区或高校附近，呈现“人才追随知识”的地理轨迹。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 136,
+        "sourceNumber": 6,
+        "type": "single",
+        "question": "数字化时代产品与服务的新特征不包括以下项?(        )",
+        "options": [
+          "A.\n\n免费化和方案化",
+          "B.\n\n定制化和体验化",
+          "C.\n\n标准化和批量化",
+          "D.\n\n网络化和智能化"
+        ],
+        "answer": "C",
+        "analysis": "数字化时代产品与服务的新特征包括网络化和智能化，体验化和定制化，免费化和方案化，在线化和自动化。(数字化时代产品与服务的新特征)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 137,
+        "sourceNumber": 7,
+        "type": "single",
+        "question": "某工业企业有三大车间，它们依次是:机械加工车间、热处理车间、装配车间。可以认为该工业企业采取了(        )原则进行了空间布置。",
+        "options": [
+          "A. 工艺专业化",
+          "B. 设备专业化",
+          "C. 对象专业化",
+          "D. 加工专业化"
+        ],
+        "answer": "A",
+        "analysis": "工艺专业化是由工艺相同的工序或工艺阶段组成一个作业单位，也即把执行统一类功能的设施与人员组合在一起，安排在同一区域。机械加工车间专门负责机械加工工艺，热处理车间专注于热处理工艺，装配车间只负责处理产品的装配工艺，每个车间都围绕一种特定的工艺来组织生产要素，符合工艺专业化的布置方式。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 138,
+        "sourceNumber": 8,
+        "type": "single",
+        "question": "某大型服装制造企业计划新建一座主要进行缝纫、组装等工序的工厂。在评估潜在选址时，下列哪个因素最可能成为其首要考虑的关键因素?(        )",
+        "options": [
+          "A. 靠近目标消费市场",
+          "B. 周边商业配套设施完善程度",
+          "C. 当地劳动力成本和供应情况",
+          "D. 当地政府的税收优惠政策期限"
+        ],
+        "answer": "C",
+        "analysis": "服装制造企业的缝纫、组装等工序属于劳动密集型，对劳动力的依赖度高，当地劳动力成本和供应情况会直接影响企业的生产成本和供应情况会直接影响企业的生产成本和生产能否顺利进行。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 139,
+        "sourceNumber": 9,
+        "type": "single",
+        "question": "物料成本控制的关键阶段是(        )",
+        "options": [
+          "A. 采购阶段",
+          "B. 设计阶段",
+          "C. 库存阶段",
+          "D. 生产工艺阶段"
+        ],
+        "answer": "B",
+        "analysis": "产品的研发设计阶段通常决定了80%的产品生产成本，因此在设计部分的物料消耗控制处于关键阶段。(产品研发设计的重要性)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 140,
+        "sourceNumber": 10,
+        "type": "single",
+        "question": "适用于单件小批生产类型的生产形式是(        )。",
+        "options": [
+          "A. 设备专业化",
+          "B. 工艺专业化",
+          "C. 加工专业化",
+          "D. 对象专业化"
+        ],
+        "answer": "B",
+        "analysis": "固定位置布置适用体积、重量非常大，以及由于某种因素导致使产品或服务对象不适宜移动的;工艺专业化布置适用于多品种少批量生产的产品;对象专业化适用于产品品种、产品结构比较稳定的大批大量生产的产品。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 141,
+        "sourceNumber": 11,
+        "type": "single",
+        "question": "建造一座跨海大桥或开发一款全新的手机操作系统，其运作流程最适合被归类为?(        )",
+        "options": [
+          "A. 按产品进行的生产流程",
+          "B. 连续性流程",
+          "C. 按项目进行的生产流程",
+          "D. 拉式流程"
+        ],
+        "answer": "C",
+        "analysis": "本题考查按流动路线的分类。项目型流程的核心特征是唯一性和一次性。产品(或成果)规模庞大、结构复杂、生产周期长，且完成后不会完全重复之前的流程。跨海大桥、航天工程、大型软件开发等都是项目型流程的典型例子。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 142,
+        "sourceNumber": 12,
+        "type": "single",
+        "question": "流程分析中应用ECRS法则时，“取消”的主要目的是消除什么?(        )",
+        "options": [
+          "A. 不必要的搬运",
+          "B. 设备故障",
+          "C. 非增值活动",
+          "D. 人员冗余"
+        ],
+        "answer": "C",
+        "analysis": "ECRS法则(取消、合并、重排、简化)中，“取消”旨在直接去除无价值的步骤，如重复检查或冗余操作，以降低浪费。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 143,
+        "sourceNumber": 13,
+        "type": "single",
+        "question": "某装配线加工一个产品需经过3道工序，实际加工时间共15分钟，但因设备等待和排队，产品从投料到完成耗时120分钟。该产品的“流程时间”是(        )",
+        "options": [
+          "A. 15分钟",
+          "B. 最后工序的完工时间",
+          "C. 平均工序等待时间",
+          "D. 120分钟"
+        ],
+        "answer": "D",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 144,
+        "sourceNumber": 14,
+        "type": "single",
+        "question": "下列哪种设施布置方式最适合飞机、船舶等大型产品的生产(        )",
+        "options": [
+          "A. 固定位置布置",
+          "B. 产品布置",
+          "C. 混合布置",
+          "D. 工艺布置"
+        ],
+        "answer": "A",
+        "analysis": "固定位置的布置形式适用于体积、重量非常大，以及由于某种因素导致使产品或服务对象不适宜移动的。比如船舶、飞机、火箭、体育赛事及音乐会、医院手术等。\n二、多选题",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 145,
+        "sourceNumber": 15,
+        "type": "single",
+        "question": "下列不是并行工程的特点的是(        )",
+        "options": [
+          "A. 较快推出新产品",
+          "B. 适于小批量、多品种生产",
+          "C. 在生产前即已注意到产品的制造问题",
+          "D. 设计成本低"
+        ],
+        "answer": "D",
+        "analysis": "并行工程需要组建包括设计，制造，营销等多领域专家的跨部门团队，在设计阶段就进行全面分析和优化，这往往需要投入更多资源，因此设计成本会增加。而ACD项均符合并行工程特点，其中D项对于小批量，多品种生产，产品的个性化需求较强，需要快速响应市场变化，并行工程就能应对这种生产模式。(并行工程的特点)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 146,
+        "sourceNumber": 16,
+        "type": "single",
+        "question": "适用于产品品种、产品结构比较稳定的大批大量流水生产的场合的生产形式是(        )。",
+        "options": [
+          "A. 对象专业化",
+          "B. 设备专业化",
+          "C. 工艺专业化",
+          "D. 加工专业化"
+        ],
+        "answer": "A",
+        "analysis": "工艺专业化以工艺为中心组织生产，适合多品种、小批量;对象专业化以特定产品为中心组织生产，适合大批量、标准化。设备专业化、加工专业化属于更细分或辅助性的组织形式，与题干场景关联性较弱。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 147,
+        "sourceNumber": 17,
+        "type": "single",
+        "question": "下列哪一项是产品和服务设计标准化的缺点?(        )",
+        "options": [
+          "A. 增加培训费用",
+          "B. 增加库存品种数",
+          "C. 减少产品多样性",
+          "D. 减少设计费用"
+        ],
+        "answer": "C",
+        "analysis": "产品和服务设计标准化强调按照统一的标准，规格进行设计与生产。为了满足标准化的要求，企业往往会减少产品的差异化设计，导致产品多样性减少。其中A项与B项都应是“减少”而非“增加”，C项属于优点。(产品与服务设计的特点)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 148,
+        "sourceNumber": 18,
+        "type": "single",
+        "question": "企业选址时，若产品运输成本占比极高(如矿泉水生产)，通常会优先考虑靠近(        )",
+        "options": [
+          "A. 目标市场",
+          "B. 原材料产地",
+          "C. 政策优惠区",
+          "D. 劳动力丰富地区"
+        ],
+        "answer": "A",
+        "analysis": "矿泉水这类产品重量大、价值相对较低，运输成本在总成本中占比很高。如果靠近目标市场布局生产基地，能大幅减少将产品从工厂运到消费者手中的运输距离和费用。而原材料(水)通常在多地都可获取，且运输成本远低于成品运输，因此优先靠近市场更划算。劳动力丰富地区、政策优惠区虽可能影响选址，但对于运输成本占比极高的产品，靠近市场是更核心的考量。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 149,
+        "sourceNumber": 19,
+        "type": "single",
+        "question": "产品设计需要考虑的因素不包括以下哪个选项?(        )",
+        "options": [
+          "A. 可靠性",
+          "B. 企业喜好",
+          "C. 顾客满意",
+          "D. 可制造性"
+        ],
+        "answer": "B",
+        "analysis": "产品设计需要考虑的因素包括顾客满意和用户体验，环境、法规道德和安全问题，产品的可制造性，产品的可靠性，产品的生命周期。(产品设计需考虑的因素)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 150,
+        "sourceNumber": 20,
+        "type": "single",
+        "question": "流程的本质是?(        )",
+        "options": [
+          "A. 产品质量控制体系",
+          "B. 一系列相互关联的活动组合",
+          "C. 企业组织架构的体现",
+          "D. 生产设备的排列顺序"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 151,
+        "sourceNumber": 21,
+        "type": "multiple",
+        "question": "以下哪种情况应在农村选址(        )",
+        "options": [
+          "A. 对环境污染大(如噪音)",
+          "B. 服务业开办",
+          "C. 需要大量受过良好教育和培训的员工",
+          "D. 工厂规模大，占地多"
+        ],
+        "answer": "AD",
+        "analysis": "城市用地零散，当工厂规模过大，占地多时，城市用地不能满足;城市居民多，生活密度大，污染或噪音严重会影响居民的生活，农村较为偏僻，可以降低对人的影响;服务业的服务对象是人，顾客参与度高，而城市人口流量大;城市的教育资源比农村好，大量人员享受过良好的教育",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 152,
+        "sourceNumber": 22,
+        "type": "multiple",
+        "question": "企业选址主要考虑的因素包括(        )",
+        "options": [
+          "A. 经济财务",
+          "B. 政治法律",
+          "C. 核心战略",
+          "D. 地理文化",
+          "E. 社会文化"
+        ],
+        "answer": "ABCDE",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 153,
+        "sourceNumber": 23,
+        "type": "multiple",
+        "question": "流程优化的目的包括以下哪些(        )",
+        "options": [
+          "A. 提升员工工作积极性",
+          "B. 降低成本",
+          "C. 提高效率",
+          "D. 改善用户体验",
+          "E. 增强灵活性"
+        ],
+        "answer": "BCDE",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 154,
+        "sourceNumber": 24,
+        "type": "multiple",
+        "question": "企业选址的常用分析方法包括(        )等方法",
+        "options": [
+          "A. 量本利分析法",
+          "B. 重心法",
+          "C. 因素评分法",
+          "D. 作业相关图法",
+          "E. 对象专业化法"
+        ],
+        "answer": "ABC",
+        "analysis": "设施选址的方法包括:量本利分析法、因素评分法、重心法",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 155,
+        "sourceNumber": 25,
+        "type": "multiple",
+        "question": "下列企业中，选址时“环境质量”会成为重要考量的有(        )",
+        "options": [
+          "A. 影视拍摄基地",
+          "B. 高端度假村",
+          "C. 疗养院",
+          "D. 精密仪器制造厂(对粉尘敏感)",
+          "E. 重型机械厂"
+        ],
+        "answer": "ABCD",
+        "analysis": "高端度假村依赖优美的自然和人文环境吸引游客，环境质量直接影响客户体验和吸引力。疗养院需要安静、洁净、空气好的环境，利于患者休养康复，环境是其核心竞争力之一。精密仪器制造厂对粉尘、湿度等环境因素敏感，环境质量不佳会影响产品精度和质量，必须严格考量。影视拍摄基地常需要特定的自然风光或人文环境作为拍摄背景，环境质量直接影响拍摄效果和作品质量。而重型机械厂生产过程中本身可能产生较大污染，对周边环境要求相对较低，因此环境质量不是其选址的重要考量。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 156,
+        "sourceNumber": 26,
+        "type": "multiple",
+        "question": "数字化时代产品与服务的新特征有哪些?(        )",
+        "options": [
+          "A. 在线化与自动化",
+          "B. 免费化与方案化",
+          "C. 网络化与智能化",
+          "D. 体验化与定制化"
+        ],
+        "answer": "ABCD",
+        "analysis": "数字化时代产品与服务的新特征包括网络化与智能化，体验化与定制化，免费化与方案化，在线化与自动化。(数字化时代产品与服务的新特征)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 157,
+        "sourceNumber": 27,
+        "type": "multiple",
+        "question": "影响设施布置的关键主导因素包括下列哪些(        )",
+        "options": [
+          "A. 物料搬运成本",
+          "B. 产品产量和服务规模",
+          "C. 企业技术水平",
+          "D. 产品结构和工艺特点",
+          "E. 企业协作水平"
+        ],
+        "answer": "BCDE",
+        "analysis": "设施布置的影响因素:产品结构和工艺特点、产品产量和服务规模、企业协作水平、企业技术水平",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 158,
+        "sourceNumber": 28,
+        "type": "multiple",
+        "question": "企业选址时，“政策因素”可能涉及的内容包括(        )",
+        "options": [
+          "A. 产业准入与环保要求",
+          "B. 人才引进与落户政策",
+          "C. 土地使用年限与价格",
+          "D. 税收减免与财政补贴",
+          "E. 进出口贸易的便利程度"
+        ],
+        "answer": "ABCDE",
+        "analysis": "税收减免与财政补贴直接关系企业运营成本;产业准入与环保要求决定企业能否在该区域合法经营;土地使用年限与价格影响长期投资规划;人才引进与落户政策有助于企业吸引和稳定人才;进出口贸易的便利程度对有跨境业务的企业至关重要。这些都是企业选址时需要考量的政策相关内容。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 159,
+        "sourceNumber": 29,
+        "type": "multiple",
+        "question": "根据菲利普·科特勒的整体产品构成理念来说，有形产品的层次包括(        )",
+        "options": [
+          "A. 潜在产品",
+          "B. 核心产品",
+          "C. 延伸产品",
+          "D. 形式产品",
+          "E. 期望产品"
+        ],
+        "answer": "ABCDE",
+        "analysis": "有形产品的构成一般可以划分为核心产品，形式产品，期望产品，延伸产品，潜在产品五个层次。(有形产品的构成)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 160,
+        "sourceNumber": 30,
+        "type": "multiple",
+        "question": "下列企业中，选址时“靠近原材料产地”会成为核心考量的有(        )",
+        "options": [
+          "A. 家具厂",
+          "B. 服装厂",
+          "C. 制糖厂",
+          "D. 炼油厂",
+          "E. 面包店"
+        ],
+        "answer": "ACD",
+        "analysis": "制糖厂:甘蔗、甜菜等原料体积大、运输成本高，且易变质，靠近原料产地可降低成本，是核心考量。家具厂:木材体积大、重量大，长途运输成本高，靠近木材产地能减少物流费用，属于核心因素。炼油厂:原油运输量大、成本高，且属于危险品，靠近原油产地(如油田)可显著降低运输成本和风险，是关键选址因素。而面包店和服装厂更依赖靠近目标市场(面包需新鲜，服装需快速响应市场需求)，原材料(面粉、布料)运输成本相对较低，因此“靠近原材料产地”并非核心考量。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 161,
+        "sourceNumber": 31,
+        "type": "multiple",
+        "question": "流程分析的常用方法包括(        )",
+        "options": [
+          "A. 头脑风暴法",
+          "B. 层次分析法",
+          "C. 德尔菲法",
+          "D. 5W1H分析法",
+          "E. 鱼骨图"
+        ],
+        "answer": "ADE",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 162,
+        "sourceNumber": 32,
+        "type": "multiple",
+        "question": "服务蓝图包含了三条分界线为(        )",
+        "options": [
+          "A. 顾客分界线",
+          "B. 支持分界线",
+          "C. 可视分界线",
+          "D. 互动分界线",
+          "E. 内部互动线"
+        ],
+        "answer": "CDE",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 163,
+        "sourceNumber": 33,
+        "type": "multiple",
+        "question": "服务蓝图的构成要素包括(        )",
+        "options": [
+          "A. 顾客行为",
+          "B. 前台员工行为",
+          "C. 有形展示",
+          "D. 支持过程",
+          "E. 后台员工行为"
+        ],
+        "answer": "ABCDE",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 164,
+        "sourceNumber": 34,
+        "type": "multiple",
+        "question": "制造业生产单位的典型布置类型有:(        )",
+        "options": [
+          "A. 固定式布置",
+          "B. 对象专业化布置",
+          "C. 工艺专业化布置",
+          "D. 混合式式布置"
+        ],
+        "answer": "ABCD",
+        "analysis": "生产运作场景布置得方法有:固定位置布置、工艺专业化布置、对象专业化布置、成组单元布置、混合式布置",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 165,
+        "sourceNumber": 35,
+        "type": "multiple",
+        "question": "研究与开发的类型包括(        )",
+        "options": [
+          "A. 基础研究",
+          "B. 实际研究",
+          "C. 应用研究",
+          "D. 开发研究"
+        ],
+        "answer": "ACD",
+        "analysis": "通常我们将研究与开发划分为三种类型，即基础研究、应用研究和开发研究。(研究与开发的类型)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 166,
+        "sourceNumber": 36,
+        "type": "multiple",
+        "question": "按生产产品或提供服务的驱动方式可将流程划分为(        )",
+        "options": [
+          "A. 单件作业流程",
+          "B. 拉式流程",
+          "C. 推式流程",
+          "D. 流水作业流程",
+          "E. 混合流程"
+        ],
+        "answer": "BCE",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 167,
+        "sourceNumber": 37,
+        "type": "multiple",
+        "question": "下列关于新产品开发重要性的说法正确的是(        )",
+        "options": [
+          "A. 新产品能帮助企业掌握市场动向;",
+          "B. 新产品开发直接关系到企业的生存和发展;",
+          "C. 企业靠新产品才能赢得竞争优势;",
+          "D. 企业要靠新产品去占领市场一席之地;"
+        ],
+        "answer": "BCD",
+        "analysis": "A正确，不开发新产品，企业易因老产品被淘汰而难生存发展;B正确，新产品能满足消费者需求，助企业占市场;C正确，独特优质的新产品可让企业在竞争中脱颖而出;D错误，企业靠市场调研掌握市场动向，非新产品。故答案为ABC。(新产品开发的作用)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 168,
+        "sourceNumber": 38,
+        "type": "multiple",
+        "question": "企业运营成本中与选址决策最为相关的通常包括(        )",
+        "options": [
+          "A. 物流运输成本",
+          "B. 资金成本",
+          "C. 人力资源成本",
+          "D. 能源成本",
+          "E. 土地获取成本"
+        ],
+        "answer": "ACDE",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 169,
+        "sourceNumber": 39,
+        "type": "multiple",
+        "question": "新产品研发的动力包括(        )",
+        "options": [
+          "A. 技术驱动",
+          "B. 政策驱动",
+          "C. 竞争驱动",
+          "D. 市场驱动"
+        ],
+        "answer": "ABCD",
+        "analysis": "驱动企业进行新产品研发的动力大致包括市场驱动、技术驱动、竞争驱动和政策驱动等，这些动力相互作用，共同推动了企业的创新和发展。(新产品研发的动力)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 170,
+        "sourceNumber": 40,
+        "type": "multiple",
+        "question": "并行工程的特点包括(        )",
+        "options": [
+          "A. 并行交叉推进",
+          "B. 全因素统筹设计",
+          "C. 高效组织协同",
+          "D. 各部门衔接松散"
+        ],
+        "answer": "ABC",
+        "analysis": "ABC均属于并行工程的特点，D选项属于串行工程的缺点。(并行工程的特点)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 171,
+        "sourceNumber": 41,
+        "type": "judge",
+        "question": "选址决策只是新企业进行的一次性决策。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "企业选址是一个持续更新的过程，不仅是新企业进行的一次性决策，在扩建、增址、迁移时都需要做出选址决策。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 172,
+        "sourceNumber": 42,
+        "type": "judge",
+        "question": "某汽车生产厂有底盘车间、发动机车间，该厂是按照对象专业化原则组织的。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "对象专业化是把某种产品或者服务的全部或大部分工艺过程集中起来，组成一个作业单位。底盘车间和发动机车间分别负责汽车底盘和发动机的生产，符合对象专业化原则。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 173,
+        "sourceNumber": 43,
+        "type": "judge",
+        "question": "采用VA/NVA分析法进行流程优化时，所有流程活动中的非增值活动都必须要去除。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 174,
+        "sourceNumber": 44,
+        "type": "judge",
+        "question": "某车间有数控车床组、铣床组、磨床组和钻床组四个设备组，该车间是按照对象专业化原则组织的。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "这些设备是按照工艺专业化原则组织的，按车床加工工艺、铣床加工工艺、磨床加工工艺、钻床加工工艺来划分。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 175,
+        "sourceNumber": 45,
+        "type": "judge",
+        "question": "企业选址时，只需要考虑成本因素即可，无需关注当地政策法规。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "企业选址的核心考虑因素包括:战略因素、经济财务因素、政治法律因素、社会文化因素、地理环境因素、自然资源条件、气候条件、环保与安全等。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 176,
+        "sourceNumber": 46,
+        "type": "judge",
+        "question": "产品研发设计流程包括产品构思—产品可行性分析—产品功能设计—产品制造设计—产品设计审核—产品最终测试—产品进入市场及评估。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "以上流程缺乏了第一个重要环节即需求调研环节。(产品研发设计的流程)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 177,
+        "sourceNumber": 47,
+        "type": "judge",
+        "question": "固定位置布置适合标准产品的生产。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "固定位置的设施布置适用体积、重量非常大的加工产品，以及由于某种因素导致产品或服务对象不适宜移动的情况。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 178,
+        "sourceNumber": 48,
+        "type": "judge",
+        "question": "外科手术病人应该采取固定位置布置。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "外科手术病人由于不方便移动，应采取固定位置布置形式。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 179,
+        "sourceNumber": 49,
+        "type": "judge",
+        "question": "企业进行基础研究是指针对某一特定的实际应用目的而进行的创造性研究活动。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "基础研究意在揭示自然现象的本质和规律，获取新知识、新原理和新方法，而不以任何特定的实际应用为目的;应用研究是为了获取某一具体领域的新知识而进行的创造性研究活动，它主要针对某一特定的实际应用目的。(基础研究与应用研究的概念)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 180,
+        "sourceNumber": 50,
+        "type": "judge",
+        "question": "汽车生产流水线是按工艺专业化布置的例子。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "汽车生产流水线是按对象专业化布置的例子，汽车生产流水线意味着所有生产的步骤都是固定的，品种单一。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 181,
+        "sourceNumber": 51,
+        "type": "judge",
+        "question": "瓶颈是指生产流程里面产能最小，节拍最慢的环节，它限制了流程的顺畅推进，需要尽可能去除。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 182,
+        "sourceNumber": 52,
+        "type": "judge",
+        "question": "VA/NVA分析(增值/非增值分析)的核心是精确计算出流程中每一项活动的具体成本。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "此题意在辨析VA/NVA分析与作业成本法(ABC) 的核心区别。VA/NVA分析的目的是定性地识别和区分流程中的步骤哪些是为客户创造价值的(VA)、哪些是必要的非增值(NNVA)、哪些是纯粹浪费(NVA)，从而为优化(如应用ECRS)提供靶心。而作业成本法(ABC) 才是用来定量计算活动成本的方法。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 183,
+        "sourceNumber": 53,
+        "type": "judge",
+        "question": "按加工服务对象的物理状态划分，石油炼制和汽车装配都属于连续性流程。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "石油炼制的原料(原油)是液体，在生产过程中通过一系列连续的化学变化，无法分离出单个产品，属于连续性流程。而汽车装配是由成千上万个离散的零部件组装而成，可以分离和计数，属于离散性流程。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 184,
+        "sourceNumber": 54,
+        "type": "judge",
+        "question": "企业在进行设施布置时，只需考虑生产或服务流程的效率，无需关注员工的工作舒适度和安全性。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "企业设施布置不仅要追求生产或服务流程的效率，员工的工作舒适度和安全性同样重要。员工在舒适、安全的环境中工作，能减少疲劳感和事故风险，进而提升工作积极性和专注度，反而有助于提高整体效率。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 185,
+        "sourceNumber": 55,
+        "type": "judge",
+        "question": "“并行工程”就是将本来串行的活动变成简单合并的技术。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "并行工程是对产品及相关过程进行并行、集成化处理的技术，核心是把传统串行的活动转为并行开展，能缩短产品开发周期、提高质量等。(并行工程与串行工程)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 186,
+        "sourceNumber": 56,
+        "type": "judge",
+        "question": "流程管理是一个静态的管理体系，一旦建立便应长期固定，以保持组织的稳定运行。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "此题意在考查对流程管理内涵的理解。流程管理的一个重要内涵就是“随环境变化”。它必须根据市场、技术、客户需求等外部环境的变化而进行动态调整和优化，是一个持续改进的过程，而不是一个静态不变的体系。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 187,
+        "sourceNumber": 57,
+        "type": "judge",
+        "question": "产品研发设计在产品生产制造的全生命周期中并不是一个举足轻重的环节。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "产品的研发设计占用了 60%的产品制造周期时间，决定了 80%以上的生产成本，产品的质量是设计出来的，因此产品研发设计是一个重要环节。(产品研发设计管理的重要性)",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 188,
+        "sourceNumber": 58,
+        "type": "judge",
+        "question": "服务业企业的选址更注重人流量和目标顾客群体分布，而制造业企业则更看重原材料供应和交通便利性。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "服务业企业的盈利很大程度上依赖于客户流量和消费转化，比如餐厅需要足够的潜在食客经过或聚集，超市要靠近目标消费群体的居住区或工作区，所以人流量和目标客户分布是关键。而制造业企业生产需要大量原材料，靠近原材料产地能降低运输成本;同时，成品要运往市场，交通便利有助于高效配送，因此原材料供应和交通便利性对其更为重要。两者的核心需求不同，导致选址侧重点有明显差异。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 189,
+        "sourceNumber": 59,
+        "type": "judge",
+        "question": "流程的本质是一系列相互关联的活动的有序组合，其目的是将输入转化为有价值的输出。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "此题考查流程的含义。该定义准确地概括了流程的核心本质，即一系列有逻辑关系的活动构成的、以实现特定目标(输出)为导向的系统。",
+        "unit": "第三四五章客观习题测试"
+      },
+      {
+        "id": 190,
+        "sourceNumber": 60,
+        "type": "judge",
+        "question": "按照企业主要的业务功能领域可以将流程分为生产运作流程、供应链流程、营销流程、财务流程以及人力资源管理流程等。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第三四五章客观习题测试"
+      }
+    ]
+  },
+  {
+    "name": "第六章客观测试习题",
+    "questions": [
+      {
+        "id": 191,
+        "sourceNumber": 1,
+        "type": "single",
+        "question": "下列不属于影响服务能力的因素是(        )。",
+        "options": [
+          "A. 人力资源",
+          "B. 设施",
+          "C. 时间及用户",
+          "D. 费用"
+        ],
+        "answer": "D",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 192,
+        "sourceNumber": 2,
+        "type": "single",
+        "question": "对于备货型企业，在年生产计划中，确定(        )是最重要的决策。",
+        "options": [
+          "A. 成本和质量",
+          "B. 品种和产量",
+          "C. 价格与品种",
+          "D. 价格与交货期"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 193,
+        "sourceNumber": 3,
+        "type": "single",
+        "question": "以下哪些计划涉及产品发展方向，生产发展规模，技术发展水平，新生产设备的建造等。(        )",
+        "options": [
+          "A. 企业层",
+          "B. 战略层",
+          "C. 战术层",
+          "D. 作业层"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 194,
+        "sourceNumber": 4,
+        "type": "single",
+        "question": "对于多品种生产企业，如果产品的结构、工艺、劳动量差别很大，可采用哪种方法来计算生产能力(        )",
+        "options": [
+          "A. 具体产品法",
+          "B. 量本利分析法",
+          "C. 代表产品法",
+          "D. 假定产品法"
+        ],
+        "answer": "D",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 195,
+        "sourceNumber": 5,
+        "type": "single",
+        "question": "滚动计划方法的优点是(        )。",
+        "options": [
+          "A. 计划是滚动的",
+          "B. 使计划的严肃性和应变性都得到保证",
+          "C. 计划是滚动的且稳定性强",
+          "D. 编制计划需要较大的工作量"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 196,
+        "sourceNumber": 6,
+        "type": "single",
+        "question": "制定生产大纲需要多项输入，下列哪项输入来自企业外部?(        )",
+        "options": [
+          "A. 原材料供应能力",
+          "B. 现有员工数量",
+          "C. 现有设备能力",
+          "D. 员工技术水平"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 197,
+        "sourceNumber": 7,
+        "type": "single",
+        "question": "在企业计划体系中，生产计划是属于(        )层面的计划。",
+        "options": [
+          "A. 战略性",
+          "B. 战术性",
+          "C. 车间级",
+          "D. 作业层"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 198,
+        "sourceNumber": 8,
+        "type": "single",
+        "question": "计划期一般为一年的生产计划是(        )",
+        "options": [
+          "A. 长期生产计划",
+          "B. 中期生产计划",
+          "C. 生产作业计划",
+          "D. 产品出产计划"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 199,
+        "sourceNumber": 9,
+        "type": "single",
+        "question": "反映企业生产可能性的一个重要指标是(        )。",
+        "options": [
+          "A. 计划能力",
+          "B. 管理能力",
+          "C. 设计能力",
+          "D. 生产能力"
+        ],
+        "answer": "D",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 200,
+        "sourceNumber": 10,
+        "type": "single",
+        "question": "下列属于短期计划的是(        )。",
+        "options": [
+          "A. 物料需求计划",
+          "B. 财务计划",
+          "C. 综合生产计划",
+          "D. 主生产计划"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 201,
+        "sourceNumber": 11,
+        "type": "multiple",
+        "question": "处理非均匀需求中改变需求的策略包括(        )",
+        "options": [
+          "A. 改变价格转移需求",
+          "B. 推迟交货",
+          "C. 顾客自助",
+          "D. 开发预定系统"
+        ],
+        "answer": "ABD",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 202,
+        "sourceNumber": 12,
+        "type": "multiple",
+        "question": "制造企业生产能力的衡定通常可以采用以下哪种方法?(        )",
+        "options": [
+          "A. 假定产品法",
+          "B. 代表产品法",
+          "C. 量本利分析法",
+          "D. 具体产品法"
+        ],
+        "answer": "ABD",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 203,
+        "sourceNumber": 13,
+        "type": "multiple",
+        "question": "生产计划中的指标主要包括(        )",
+        "options": [
+          "A. 产量指标",
+          "B. 产值指标",
+          "C. 品种指标",
+          "D. 质量指标"
+        ],
+        "answer": "ABCD",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 204,
+        "sourceNumber": 14,
+        "type": "multiple",
+        "question": "服务系统通常具有以下哪些特点(        )",
+        "options": [
+          "A. 服务系统的生产与消费同时同地发生。",
+          "B. 服务系统的产品可以被储存。",
+          "C. 顾客有不同个性，每个顾客的服务时间差异较大，难以确定服务系统的最小运作能力。",
+          "D. 服务系统的生产与消费同地发生，可不同时发生。"
+        ],
+        "answer": "AC",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 205,
+        "sourceNumber": 15,
+        "type": "multiple",
+        "question": "备货型生产企业编制生产计划的核心内容是确定:(        )",
+        "options": [
+          "A. 成本",
+          "B. 交货期",
+          "C. 品种",
+          "D. 产量",
+          "E. 价格"
+        ],
+        "answer": "CD",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 206,
+        "sourceNumber": 16,
+        "type": "multiple",
+        "question": "制造企业的生产能力可分为以下哪几种?(        )",
+        "options": [
+          "A. 查定能力",
+          "B. 服务能力",
+          "C. 现实能力",
+          "D. 设计能力"
+        ],
+        "answer": "ACD",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 207,
+        "sourceNumber": 17,
+        "type": "multiple",
+        "question": "以产出来衡量生产能力的组织有(        )",
+        "options": [
+          "A. 商店",
+          "B. 电影院",
+          "C. 发电厂",
+          "D. 电视机厂"
+        ],
+        "answer": "CD",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 208,
+        "sourceNumber": 18,
+        "type": "multiple",
+        "question": "对于订货型企业，在年度生产计划中，确定(        )是最重要的决策。",
+        "options": [
+          "A. 交货期",
+          "B. 产量",
+          "C. 品种",
+          "D. 价格",
+          "E. 成本"
+        ],
+        "answer": "AD",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 209,
+        "sourceNumber": 19,
+        "type": "multiple",
+        "question": "企业的生产计划主要包括(        )",
+        "options": [
+          "A. 资源能力计划",
+          "B. 综合生产计划",
+          "C. 产品出产计划",
+          "D. 产品交付计划"
+        ],
+        "answer": "BCD",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 210,
+        "sourceNumber": 20,
+        "type": "multiple",
+        "question": "运用代表产品法衡量生产能力时，通常选择哪两项乘积最大的产品作为代表产品来表示生产能力。(        )",
+        "options": [
+          "A. 生产周期",
+          "B. 台时定额",
+          "C. 产量",
+          "D. 成本"
+        ],
+        "answer": "BC",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 211,
+        "sourceNumber": 21,
+        "type": "multiple",
+        "question": "服务需求具有以下哪些特性:(        )",
+        "options": [
+          "A. 服务系统的生产与消费同时同地发生。",
+          "B. 服务系统的生产与消费同地发生，可不同时发生。",
+          "C. 服务系统的产品可以被储存。",
+          "D. 顾客有不同个性，每个顾客的服务时间差异较大，难以确定服务系统的最小运作能力。"
+        ],
+        "answer": "AD",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 212,
+        "sourceNumber": 22,
+        "type": "multiple",
+        "question": "下列不属于中期计划的是(        )。",
+        "options": [
+          "A. 资源能力计划",
+          "B. 车间作业计划",
+          "C. 物料需求计划",
+          "D. 主生产计划"
+        ],
+        "answer": "ABC",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 213,
+        "sourceNumber": 23,
+        "type": "multiple",
+        "question": "处理非均匀需求的调整能力策略主要包括以下哪些:(        )",
+        "options": [
+          "A. 员工加班加点",
+          "B. 利用兼职员工",
+          "C. 利用库存调节",
+          "D. 转包",
+          "E. 改变劳动力数量"
+        ],
+        "answer": "ABCDE",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 214,
+        "sourceNumber": 24,
+        "type": "multiple",
+        "question": "服务业综合计划的特点包括以下哪些方面:(        )",
+        "options": [
+          "A. 纯服务不能采用改变库存的策略",
+          "B. 服务需求更难预计",
+          "C. 服务效率往往高于制造业的生产效率",
+          "D. 服务业劳动力的柔性比制造业小",
+          "E. 服务能力容易测量和预计"
+        ],
+        "answer": "AB",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 215,
+        "sourceNumber": 25,
+        "type": "multiple",
+        "question": "实行收益管理的企业通常具有以下哪些特点:(        )",
+        "options": [
+          "A. 产品或服务可以预售",
+          "B. 市场可以根据顾客需求偏好进行细分 D变动成本高，而固定成本较低",
+          "C. 产品价值易逝",
+          "D. 需求变化较小"
+        ],
+        "answer": "ABC",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 216,
+        "sourceNumber": 26,
+        "type": "judge",
+        "question": "管理和调节产能的办法有改变劳动力数量、采取超售策略、开发预订(约)系统、将固定产能变成可调节产能等。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 217,
+        "sourceNumber": 27,
+        "type": "judge",
+        "question": "我们通常所说的“某电视机生产企业年产电视机多少台”，是按代表产品来计算的。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 218,
+        "sourceNumber": 28,
+        "type": "judge",
+        "question": "生产运作能力是生产运作系统在一定时间内可以实现的最大产出量。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 219,
+        "sourceNumber": 29,
+        "type": "judge",
+        "question": "查定能力为计划年度实际可达到的生产能力，是编制生产计划的依据。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 220,
+        "sourceNumber": 30,
+        "type": "judge",
+        "question": "用改变库存水平的策略处理非均匀需求，对纯劳务性生产也适用。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 221,
+        "sourceNumber": 31,
+        "type": "judge",
+        "question": "综合生产计划又叫主生产计划。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 222,
+        "sourceNumber": 32,
+        "type": "judge",
+        "question": "滚动计划的连续性和应变性好，但严肃性差。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 223,
+        "sourceNumber": 33,
+        "type": "judge",
+        "question": "产品出产计划和产品交付计划通常以具体产品为计划对象。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 224,
+        "sourceNumber": 34,
+        "type": "judge",
+        "question": "代表产品法适用于产品结构、工艺不相似，多品种生产的企业。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 225,
+        "sourceNumber": 35,
+        "type": "judge",
+        "question": "市场导向法强调成本必须控制在市场价格允许范围内，并实现成本最小化。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 226,
+        "sourceNumber": 36,
+        "type": "judge",
+        "question": "对于流程式生产，生产能力是一个清晰而准确的概念;而对于加工装配式生产，生产能力则是一个相对模糊的概念。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 227,
+        "sourceNumber": 37,
+        "type": "judge",
+        "question": "产品出产计划和产品交付计划是同一回事。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 228,
+        "sourceNumber": 38,
+        "type": "judge",
+        "question": "用收入利润排序法确定品种，收入少、利润小的产品不应再生产。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 229,
+        "sourceNumber": 39,
+        "type": "judge",
+        "question": "综合计划要求具体制定每一具体品种的产品生产数量。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      },
+      {
+        "id": 230,
+        "sourceNumber": 40,
+        "type": "judge",
+        "question": "产品出产计划是生产大纲的关键输入。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第六章客观测试习题"
+      }
+    ]
+  },
+  {
+    "name": "第七章库存控制作业题",
+    "questions": [
+      {
+        "id": 231,
+        "sourceNumber": 1,
+        "type": "judge",
+        "question": "单周期库存控制中，若需求量小于订货量产生的单位超储费用 Co，其计算公式为单位成本 (c) 减去单位处理费用 (s)，且处理费用 s 只能是正值(如折价变卖)。(        )​",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "处理费用 s“可能是正值，如折价变卖;也可能是负值。",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 232,
+        "sourceNumber": 2,
+        "type": "judge",
+        "question": "单周期库存模型的欠储费用是指过量进货带来的损失。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 233,
+        "sourceNumber": 3,
+        "type": "judge",
+        "question": "定量控制系统适用于库存管理费高、物资计数难的情况，定期控制系统适用于库存管理费低、物品易计数的情况。(        )​",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "内容明确定量适用于库存管理费低、物品易计数等情况，定期适用于库存管理费高、物资计数难等情况，题干表述颠倒。",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 234,
+        "sourceNumber": 4,
+        "type": "judge",
+        "question": "库存控制目标是在满足需求的前提下，最大限度降低库存量或者在确保顾客满意的前提下，最大限度降低库存成本。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 235,
+        "sourceNumber": 5,
+        "type": "judge",
+        "question": "对干价格折扣模型，按最低价求得的经济订货批量如果可行，则一定是最佳订货批量(即相应的总费用最低)。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 236,
+        "sourceNumber": 6,
+        "type": "judge",
+        "question": "ABC分类法是按照物品的单价高低进行排序的。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 237,
+        "sourceNumber": 7,
+        "type": "judge",
+        "question": "EOQ模型就是要使订货费用最省。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 238,
+        "sourceNumber": 8,
+        "type": "judge",
+        "question": "固定量系统就是订货点和订货间隔都为固定量的库存控制系统。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 239,
+        "sourceNumber": 9,
+        "type": "judge",
+        "question": "订货点库存法是事先决定一个存货水平，当库存的消耗降到订购点时，就下单补货，使库存在用完前如期获得补充。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 240,
+        "sourceNumber": 10,
+        "type": "judge",
+        "question": "库存是指存放在仓库里的物品。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 241,
+        "sourceNumber": 11,
+        "type": "single",
+        "question": "在单周期库存控制模型中，连续需求下的最佳订货量 Q需满足的核心概率条件是(        )",
+        "options": [
+          "A.\n\nP(Q*) = Co - Cu",
+          "B.\n\nP (Q) = Cu/(Cu + Co)",
+          "C.\n\nP(Q*) = Cu - Co",
+          "D.\n\nP(Q*) = Co/(Cu + Co)"
+        ],
+        "answer": "D",
+        "analysis": "最佳订货量 Q满足 P (Q) = Co/(Cu + Co)。",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 242,
+        "sourceNumber": 12,
+        "type": "single",
+        "question": "在双仓系统中，第二个仓内的存储量为:( )",
+        "options": [
+          "A. 安全库存量",
+          "B. RL",
+          "C. EOQ",
+          "D. 安全库存加上最佳订货批量"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 243,
+        "sourceNumber": 13,
+        "type": "single",
+        "question": "以下哪项费用不属于维持库存费?( )",
+        "options": [
+          "A. 缺货损失费",
+          "B. 保险",
+          "C. 利息",
+          "D. 陈旧化损失",
+          "E. 仓库照明"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 244,
+        "sourceNumber": 14,
+        "type": "single",
+        "question": "在制定库存量的决策时，不需考虑下述哪项费用?( )",
+        "options": [
+          "A. 调整准备费",
+          "B. 缺货损失费",
+          "C. 订货费",
+          "D. 维持库存费",
+          "E. 固定成本"
+        ],
+        "answer": "E",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 245,
+        "sourceNumber": 15,
+        "type": "single",
+        "question": "假定无需安全库存，某产品的平均日消耗量为30件，提前期为10天，现有库存量为500件，订货点是多少?( )",
+        "options": [
+          "A. 500",
+          "B. 200",
+          "C. 400",
+          "D. 300",
+          "E. 600"
+        ],
+        "answer": "D",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 246,
+        "sourceNumber": 16,
+        "type": "single",
+        "question": "下面哪一项不是EOQ模型的假设条件?( )",
+        "options": [
+          "A. 有数量折扣",
+          "B. 不允许缺货",
+          "C. 年需求为已知的常量",
+          "D. 提前期已知且固定",
+          "E. 补充率为无限大"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 247,
+        "sourceNumber": 17,
+        "type": "single",
+        "question": "下面哪一项不是维持库存的原因?( )",
+        "options": [
+          "A. 减少订货费",
+          "B. 使生产系统平稳运行",
+          "C. 防止短缺",
+          "D. 减少缺货风险",
+          "E. 使生产活动准时进行"
+        ],
+        "answer": "E",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 248,
+        "sourceNumber": 18,
+        "type": "single",
+        "question": "品种多，占用资金少，采购较容易的次要物品是指( )。",
+        "options": [
+          "A. D类物品",
+          "B. C类物品",
+          "C. B类物品",
+          "D. A类物品"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 249,
+        "sourceNumber": 19,
+        "type": "single",
+        "question": "下述哪项不属于维持库存费?( )",
+        "options": [
+          "A. 被盗损失",
+          "B. 运输费用",
+          "C. 仓储设施折旧",
+          "D. 物料费用",
+          "E. 保险费"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 250,
+        "sourceNumber": 20,
+        "type": "single",
+        "question": "下列属于相关需求的是( )。",
+        "options": [
+          "A. 用户订购的产品",
+          "B. 科研试制需要的样品",
+          "C. 售后维修需要的备品备件",
+          "D. 半成品、零部件、原材料需求"
+        ],
+        "answer": "D",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 251,
+        "sourceNumber": 21,
+        "type": "multiple",
+        "question": "库存状态信息包括(        )",
+        "options": [
+          "A. 安全库存量",
+          "B. 当前库存量",
+          "C. 订购批量",
+          "D. 提前期",
+          "E. 计划入库量"
+        ],
+        "answer": "ABCDE",
+        "analysis": "库存状态信息包括以上五个选项。",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 252,
+        "sourceNumber": 22,
+        "type": "multiple",
+        "question": "固定量系统就是( )都为固定的量的库存控制系统。",
+        "options": [
+          "A.\n\n采购时间间隔",
+          "B.\n\n订货提前期",
+          "C.\n\n订货量",
+          "D.\n\n订货点"
+        ],
+        "answer": "CD",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 253,
+        "sourceNumber": 23,
+        "type": "multiple",
+        "question": "以下哪些途径可以持续降低库存水平、加快库存周转?(        )",
+        "options": [
+          "A. 确定合理的库存服务水平和准时交货水平",
+          "B. 加强对市场需求的预测并提供预测的准确性",
+          "C. 降低安全库存到合理的水平",
+          "D. 提高全员的削减库存意识"
+        ],
+        "answer": "ABCD",
+        "analysis": "实现库存管理的目标需要既满足客户需求，同时避免过度库存导致的资源浪费。",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 254,
+        "sourceNumber": 24,
+        "type": "multiple",
+        "question": "制造企业的库存通常包括以下哪几种形式( )。",
+        "options": [
+          "A.\n\n原材料",
+          "B.\n\n产成品",
+          "C.\n\n库存记录",
+          "D.\n\n在制品"
+        ],
+        "answer": "ABD",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 255,
+        "sourceNumber": 25,
+        "type": "multiple",
+        "question": "典型的库存控制系统包括以下哪几种?()",
+        "options": [
+          "A.\n\n双仓系统",
+          "B.\n\n最大最小系统",
+          "C.\n\n固定量系统",
+          "D.\n\n固定间隔期系统"
+        ],
+        "answer": "BCD",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 256,
+        "sourceNumber": 26,
+        "type": "multiple",
+        "question": "随库存量增加而增加的费用包括( )",
+        "options": [
+          "A. 税收和保险",
+          "B. 缺货损失",
+          "C. 物品的和陈旧",
+          "D. 资金成本",
+          "E. 仓储空间费用"
+        ],
+        "answer": "ACDE",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 257,
+        "sourceNumber": 27,
+        "type": "multiple",
+        "question": "根据对物品需求是否重复可将物品分为哪几种需求( )",
+        "options": [
+          "A. 相关需求",
+          "B. 独立需求",
+          "C. 多周期需求",
+          "D. 单周期需求"
+        ],
+        "answer": "CD",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 258,
+        "sourceNumber": 28,
+        "type": "multiple",
+        "question": "库存的作用包括哪些?( )",
+        "options": [
+          "A. 稳定生产",
+          "B. 缩短订货提前期",
+          "C. 分摊订货费用",
+          "D. 防止短缺"
+        ],
+        "answer": "ABCD",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 259,
+        "sourceNumber": 29,
+        "type": "multiple",
+        "question": "以下哪些属于库存维持成本?( )",
+        "options": [
+          "A. 资金占用",
+          "B. 失窃",
+          "C. 库房租金",
+          "D. 损坏、过期变质"
+        ],
+        "answer": "ACD",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 260,
+        "sourceNumber": 30,
+        "type": "multiple",
+        "question": "库存成本一般包括哪些?( )",
+        "options": [
+          "A. 缺货损失成本",
+          "B. 维持库存成本",
+          "C. 订货成本",
+          "D. 机会成本"
+        ],
+        "answer": "ABC",
+        "analysis": "",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 261,
+        "sourceNumber": 31,
+        "type": "calculation",
+        "question": "某公司想通过价格折扣减少其总库存费用。已知一次订货费为4元，单位维持库存费为库存物品价值的2%，年需要量为10，000件，订货量为0-2499时，单价为1.2元，订货量为2500-3999时，单价为1元，订货量为4000及以上时，单价为0.98元，求最佳订货量。",
+        "options": [],
+        "answer": "EOQ=\nQ(0.98)=2021,不可行\nQ(1.0)=2000，不可行\nQ(1.2)=1826，可行\nCT(1826)=10000*1.20+10000/1826*4+(1826/2)(0.02*1.20)=12043.82CT(2500)=10000*1.00+10000/2500*4+(2500/2)(0.02*1.00)=10041\nCT(4000)=10000*0.98+10000/4000*4+(4000/2)(0.02*0.98)=9848.20\nQ=4000为最佳订货批量",
+        "analysis": "EOQ=\nQ(0.98)=2021,不可行\nQ(1.0)=2000，不可行\nQ(1.2)=1826，可行\nCT(1826)=10000*1.20+10000/1826*4+(1826/2)(0.02*1.20)=12043.82CT(2500)=10000*1.00+10000/2500*4+(2500/2)(0.02*1.00)=10041\nCT(4000)=10000*0.98+10000/4000*4+(4000/2)(0.02*0.98)=9848.20\nQ=4000为最佳订货批量",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 262,
+        "sourceNumber": 32,
+        "type": "calculation",
+        "question": "某设备公司每年要按单价4元购入54000套轴承组合件。单位库存维持费为每年每套轴承9元。每次订货费用为20元，试求经济订货批量和年订货次数。",
+        "options": [],
+        "answer": "EOQ = =490套，年订货次数=54000/490=111 次",
+        "analysis": "EOQ = =490套，年订货次数=54000/490=111 次",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 263,
+        "sourceNumber": 33,
+        "type": "calculation",
+        "question": "华棉纺织厂生产牛仔衣面料，生产率是2500米/天:已知市场需求均匀、稳定，每年(按250天计算)市场需求量为180000米，每次生产的调整准备费为175元，单位维持库存费用是0.40元/米·年，求:\n(1)工厂的经济生产批量EPL是多少?\n(2)每次开工，工厂需要持续生产多少天才能完成任务?\n(3)最高库存水平是多少?(假设第一次生产前的库存为零)",
+        "options": [],
+        "answer": "(1)EPL==14873米\n(2)T==5.95天\n(3)Imax=EPL×(1-)=10589米",
+        "analysis": "(1)EPL==14873米\n(2)T==5.95天\n(3)Imax=EPL×(1-)=10589米",
+        "unit": "第七章库存控制作业题"
+      },
+      {
+        "id": 264,
+        "sourceNumber": 34,
+        "type": "calculation",
+        "question": "某种时令商品在适销季节到来前一个月，批发单价为16.25元，零售单价为26.95元，如果该商品销售完了，当时是不能补充的。过时卖不出去的商品单价为14.95元，根据往年情况，该产品的需求分布率如下表所示，求最佳订货量。\n\n需求d(打)\t6\t7\t8\t9\t10\t11\t12\t13\t14\t15\n分布律P(d)\t0.03\t0.05\t0.07\t0.15\t0.20\t0.20\t0.15\t0.07\t0.05\t0.03",
+        "options": [],
+        "answer": "P(D*)= CO/(Cu+CO)=1.3/(1.3+10.7)=0.108,最佳订货批量为 13 打。",
+        "analysis": "P(D*)= CO/(Cu+CO)=1.3/(1.3+10.7)=0.108,最佳订货批量为 13 打。",
+        "unit": "第七章库存控制作业题"
+      }
+    ]
+  },
+  {
+    "name": "第八章客观测试题",
+    "questions": [
+      {
+        "id": 265,
+        "sourceNumber": 1,
+        "type": "single",
+        "question": "MRP的基本思想是(        )",
+        "options": [
+          "A. 围绕物料转化组织制造资源，实现按需准时生产",
+          "B. 按订单组织生产",
+          "C. 按预测组织生产",
+          "D. 按库存组织生产"
+        ],
+        "answer": "A",
+        "analysis": "MRP的基本思想是围绕物料转化组织制造资源，实现按需准时生产。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 266,
+        "sourceNumber": 2,
+        "type": "single",
+        "question": "哪种行业最适合应用MRP?(        )",
+        "options": [
+          "A. 炼油厂",
+          "B. 医院",
+          "C. 机床厂",
+          "D. 造纸厂"
+        ],
+        "answer": "C",
+        "analysis": "MRP主要适用于加工装配式企业。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 267,
+        "sourceNumber": 3,
+        "type": "single",
+        "question": "以下哪一项不是相关需求?(        )",
+        "options": [
+          "A. 在制品",
+          "B. 成品",
+          "C. 外购零件",
+          "D. 原材料"
+        ],
+        "answer": "B",
+        "analysis": "相关需求是企业内部对于产品生产所需要的原材料、毛坯、零件和部件的需求。成品的需求来自于企业外部客户的需求，是典型的独立需求。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 268,
+        "sourceNumber": 4,
+        "type": "single",
+        "question": "以下哪项是独立需求的特点?(        )",
+        "options": [
+          "A. 是相关需求的组成部分",
+          "B. 可通过MRP精确计算",
+          "C. 发生在制造过程中",
+          "D. 通常采用预测或订单了解需求量"
+        ],
+        "answer": "D",
+        "analysis": "独立需求通常采用预测或订单来了解需求量。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 269,
+        "sourceNumber": 5,
+        "type": "single",
+        "question": "MRP的3种输入信息中，应将计划时间内每一时间周期最终成品的计划生产量记入(        )。",
+        "options": [
+          "A. 库存状态信息",
+          "B. 零件需要明细表",
+          "C. 主生产计划",
+          "D. 产品结构信息"
+        ],
+        "answer": "C",
+        "analysis": "主生产计划详细规定了要生产什么(最终产品/独立需求件)、生产多少、以及在什么时间段内完成，通常以周或天为时间单位，是一个精确到时间周期的产出计划。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 270,
+        "sourceNumber": 6,
+        "type": "single",
+        "question": "MRP的基本思想不包括以下哪一项？",
+        "options": [
+          "A. 根据产品出产计划倒推出相关物料的需求",
+          "B. 围绕物料转化组织制造资源，实现按需准时生产",
+          "C. 将所有物料视为独立需求进行管理",
+          "D. 打破产品品种界线，把所有物料逻辑上视为相同"
+        ],
+        "answer": "C",
+        "analysis": "MRP的核心是处理相关需求，而非独立需求。独立需求由预测或订单决定，相关需求则通过MRP计算得出。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 271,
+        "sourceNumber": 7,
+        "type": "single",
+        "question": "关于MRP处理过程的描述，以下哪项是正确的?(        )",
+        "options": [
+          "A. 逐个产品自顶向下处理可提高MRP效率",
+          "B. 按父项的计划发出订货量来计算子项的总需要量，并保持时间一致",
+          "C. 净需要量等于总需要量加上可用库存量",
+          "D. MRP运算的起点是分解BOM"
+        ],
+        "answer": "B",
+        "analysis": "进行MRP处理的关键是找出上层元件(父项)与下层元件(子项)之间的联系。这种联系就是:按父项的计划发出订货量来计算子项的总需要量，并保持时间上的一致。\n二、多项选择题",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 272,
+        "sourceNumber": 8,
+        "type": "single",
+        "question": "MRP的基本思想是围绕物料转化组织制造资源，实现按需准时生产。以下哪项不是MRP基本思想的体现？",
+        "options": [
+          "A. 将企业生产过程中涉及的所有物料视为相同的逻辑单元",
+          "B. 实现按需要准时生产",
+          "C. 通过预测顾客需求来确定物料采购数量",
+          "D. 根据产品出产计划倒推出相关物料的需求"
+        ],
+        "answer": "C",
+        "analysis": "MRP的基本思想是基于产品出产计划倒推物料需求，而非通过预测顾客需求（这是独立需求的处理方式）。选项C描述的是独立需求的管理方法，不属于MRP的基本思想。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 273,
+        "sourceNumber": 9,
+        "type": "single",
+        "question": "闭环MRP相比传统MRP新增的功能不包括:(        )",
+        "options": [
+          "A. 信息反馈机制",
+          "B. 财务集成",
+          "C. 计划调整功能",
+          "D. 能力需求计划"
+        ],
+        "answer": "B",
+        "analysis": "闭环MRP补充了编制能力需求计划、建立信息反馈机制、计划调整功能。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 274,
+        "sourceNumber": 10,
+        "type": "single",
+        "question": "在MRP系统中，产品结构文件的最高层(0层)代表:(        )",
+        "options": [
+          "A. 原材料",
+          "B. 半成品",
+          "C. 零件",
+          "D. 最终产品项"
+        ],
+        "answer": "D",
+        "analysis": "通常最高层0层代表最终产品项。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 275,
+        "sourceNumber": 11,
+        "type": "single",
+        "question": "MRP系统计算物料需求时，采用的是以下哪种顺序？",
+        "options": [
+          "A. 并行处理",
+          "B. 随机处理",
+          "C. 自顶向下",
+          "D. 自底向上"
+        ],
+        "answer": "C",
+        "analysis": "MRP的处理过程是自顶向下、逐层处理的。从最终产品（0层）开始，依次计算各层零部件的需求，确保计算的准确性和效率。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 276,
+        "sourceNumber": 12,
+        "type": "single",
+        "question": "在MRP系统中，起“主控”作用的是(        )。",
+        "options": [
+          "A. 主生产计划",
+          "B. 物料清单",
+          "C. 库存信息",
+          "D. 工艺路线"
+        ],
+        "answer": "A",
+        "analysis": "主生产计划是MRP的主要输入，它是MRP运行的驱动源。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 277,
+        "sourceNumber": 13,
+        "type": "single",
+        "question": "MRP系统的主要输入不包括以下哪项？",
+        "options": [
+          "A. 销售预测报告",
+          "B. 主生产计划（MPS）",
+          "C. 库存状态文件",
+          "D. 物料清单（BOM）"
+        ],
+        "answer": "A",
+        "analysis": "MRP的主要输入包括主生产计划（MPS）、物料清单（BOM）和库存状态文件。销售预测报告是制定MPS的依据之一，但不是MRP系统的直接输入。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 278,
+        "sourceNumber": 14,
+        "type": "single",
+        "question": "MRP主要适用于以下哪种生产类型？",
+        "options": [
+          "A. 流程式生产（如炼油）",
+          "B. 复杂程度高的单件小批生产",
+          "C. 批量生产且产品种类多的加工装配式生产",
+          "D. 连续型生产（如钢铁制造）"
+        ],
+        "answer": "C",
+        "analysis": "MRP适用于加工装配式生产行业，尤其是批量生产、品种较多的企业。流程式生产（如炼油）和复杂单件小批生产不适合MRP。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 279,
+        "sourceNumber": 15,
+        "type": "single",
+        "question": "以下哪项不是MRP的输入?(        )",
+        "options": [
+          "A. 库存状态文件",
+          "B. 产品结构文件",
+          "C. 生产大纲",
+          "D. 主生产计划"
+        ],
+        "answer": "C",
+        "analysis": "MRP的三个重要输入分别是主生产计划(MPS)，物料清单(产品结构文件，BOM)和库存状态文件。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 280,
+        "sourceNumber": 16,
+        "type": "single",
+        "question": "下列不属于MRP的基本要素是(        )。",
+        "options": [
+          "A. 产品信息",
+          "B. 库存信息",
+          "C. 反馈信息",
+          "D. 主生产计划"
+        ],
+        "answer": "C",
+        "analysis": "MRP的基本要素包括主生产计划、产品信息和库存信息。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 281,
+        "sourceNumber": 17,
+        "type": "single",
+        "question": "以下关于独立需求和相关需求的说法，正确的是？",
+        "options": [
+          "A. 独立需求的计划方法是MRP",
+          "B. 相关需求来源于企业内部生产过程",
+          "C. 独立需求的物料类型主要是原材料和在制品",
+          "D. 相关需求的估计方法是预测或订单"
+        ],
+        "answer": "B",
+        "analysis": "独立需求的物料类型是成品，估计方法是预测或订单，计划方法是EOQ或ROP；相关需求来源于企业内部生产过程，物料类型是原材料和在制品，估计方法是计算，计划方法是MRP。选项D正确。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 282,
+        "sourceNumber": 18,
+        "type": "single",
+        "question": "在闭环的MRP完成对生产计划与控制的基础上的进一步扩展，将经营、财务、生产管理子系统相结合，形成(        )系统。",
+        "options": [
+          "A. 闭环物料需求计划",
+          "B. 物料需求计划",
+          "C. ERP",
+          "D. 制造资源计划"
+        ],
+        "answer": "D",
+        "analysis": "MRPⅡ是闭环MRP的延伸和扩充，其核心思想是将企业的制造、财务、销售、采购、工程技术等各个子系统集成到一个一体化的系统中，从而实现对整个企业资源的有效规划和利用。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 283,
+        "sourceNumber": 19,
+        "type": "multiple",
+        "question": "下列属于MRP主要输入的是(        )。",
+        "options": [
+          "A. 产品信息",
+          "B. 主生产计划",
+          "C. 库存信息",
+          "D. 反馈信息"
+        ],
+        "answer": "ABC",
+        "analysis": "MRP的基本要素包括主生产计划、产品信息和库存信息。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 284,
+        "sourceNumber": 20,
+        "type": "multiple",
+        "question": "MRP的工作目标包括哪些?(        )",
+        "options": [
+          "A. 保证尽可能低的库存水平",
+          "B. 业务流程重组",
+          "C. 及时取得生产所需的原材料及零部件，保证按时供应用户所需产品",
+          "D. 计划生产活动与采购活动"
+        ],
+        "answer": "ACD",
+        "analysis": "业务流程重组不是MRP的直接工作目标，它通常是实施ERP系统时为了优化流程而进行的更高层次的管理活动。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 285,
+        "sourceNumber": 21,
+        "type": "multiple",
+        "question": "用传统的订货点方法来处理制造过程中的供需矛盾，存在以下缺点:(        )",
+        "options": [
+          "A. 高库存与低服务水平并存",
+          "B. 形成“块状”需求",
+          "C. 形成锯齿状需求",
+          "D. 盲目性"
+        ],
+        "answer": "ABD",
+        "analysis": "传统的订货点方法用于制造过程，会出现盲目维持一定量的库存来保证需要、高库存与低服务水平的共存、形成“块状”需求的缺陷。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 286,
+        "sourceNumber": 22,
+        "type": "multiple",
+        "question": "应用MRP系统时需考虑的问题包括:(        )",
+        "options": [
+          "A. 变型产品",
+          "B. 安全库存",
+          "C. 订货提前期",
+          "D. 批量"
+        ],
+        "answer": "ABCD",
+        "analysis": "应用MRP系统时需要考虑的问题包括安全库存、订货提前期、批量、变型产品。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 287,
+        "sourceNumber": 23,
+        "type": "multiple",
+        "question": "MRP的处理过程包括以下哪些关键步骤？",
+        "options": [
+          "A. 利用批量规则确定计划发出订货数量",
+          "B. 确定上层元件的计划发出订货量",
+          "C. 通过预测确定物料需求",
+          "D. 计算子项的总需要量"
+        ],
+        "answer": "ABD",
+        "analysis": "MRP的处理过程包括确定上层元件的计划发出订货量、计算子项的总需要量、利用批量规则确定计划发出订货数量等步骤。MRP是基于产品出产计划倒推物料需求，而非通过预测（预测是独立需求的处理方式）。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 288,
+        "sourceNumber": 24,
+        "type": "multiple",
+        "question": "经过MRP程序的处理，将产品出产计划转化为:(        )",
+        "options": [
+          "A. 外购件采购计划",
+          "B. 产品交付计划",
+          "C. 综合生产计划",
+          "D. 自制件出产计划"
+        ],
+        "answer": "AD",
+        "analysis": "MRP的两个核心输出是生产计划和采购计划。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 289,
+        "sourceNumber": 25,
+        "type": "multiple",
+        "question": "某种零件的需要量是由哪些项决定的?(        )",
+        "options": [
+          "A. 净需要量",
+          "B. 现有数",
+          "C. 上层元件的总需要量",
+          "D. 上层元件的计划发出订货量"
+        ],
+        "answer": "ABCD",
+        "analysis": "某种零件的需要量是由总需要量、预计到货量、现有数、净需要量和计划发出订货量共同决定的。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 290,
+        "sourceNumber": 26,
+        "type": "multiple",
+        "question": "MRP的扩展大致经历了以下哪几个阶段?(        )",
+        "options": [
+          "A. 开环MRP",
+          "B. 闭环MRP",
+          "C. MRPII",
+          "D. ERP"
+        ],
+        "answer": "BCD",
+        "analysis": "MRP的扩展经历了从基本MRP、闭环MRP到MRP II，最终发展为ERP，并进一步集成供应链和智能技术的阶段。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 291,
+        "sourceNumber": 27,
+        "type": "multiple",
+        "question": "以下关于独立需求和相关需求的区别，正确的有？",
+        "options": [
+          "A. 独立需求的物料类型是成品，相关需求的物料类型是原材料和在制品",
+          "B. 独立需求的计划方法是EOQ或ROP，相关需求的计划方法是MRP",
+          "C. 独立需求的需求来源是顾客，相关需求的需求来源是企业内部",
+          "D. 独立需求和相关需求都可以通过预测来估计"
+        ],
+        "answer": "ABC",
+        "analysis": "独立需求的估计方法是预测或订单，相关需求的估计方法是计算。选项D错误，其他选项均正确描述了独立需求与相关需求的区别。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 292,
+        "sourceNumber": 28,
+        "type": "multiple",
+        "question": "按照生产工艺的特点，MRP主要用于以下哪些行业?(        )",
+        "options": [
+          "A. 机械制造",
+          "B. 家具厂",
+          "C. 服装厂",
+          "D. 炼油厂"
+        ],
+        "answer": "ABC",
+        "analysis": "按照生产工艺的特点，MRP主要用于加工装配式生产行业，如电子设备厂、机械制造厂、家具厂、服装厂等等。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 293,
+        "sourceNumber": 29,
+        "type": "multiple",
+        "question": "闭环MRP的“闭环”含义包括:(        )",
+        "options": [
+          "A. 仅用于销售部门",
+          "B. 仅考虑物料需求",
+          "C. 具有信息反馈机制",
+          "D. 考虑能力需求"
+        ],
+        "answer": "CD",
+        "analysis": "闭环MRP的“闭环”一方面是指将与物料有关的能力需求考虑进去，另一方面是指计划制定后需取得反馈信息。\n三、判断题",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 294,
+        "sourceNumber": 30,
+        "type": "multiple",
+        "question": "以下哪些是MRP的基本思想:(        )",
+        "options": [
+          "A. 按反工艺顺序来确定物料需要量和需要时间",
+          "B. 围绕物料转化组织制造资源",
+          "C. 按需要准时生产",
+          "D. 以设备为中心来组织生产"
+        ],
+        "answer": "ABC",
+        "analysis": "MRP是以物料为中心来组织生产的。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 295,
+        "sourceNumber": 31,
+        "type": "judge",
+        "question": "MRP叫作制造资源计划，MRPⅡ叫作物料需求计划。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "MRP叫作物料需求计划，MRPⅡ叫作制造资源计划。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 296,
+        "sourceNumber": 32,
+        "type": "judge",
+        "question": "实施ERP通常要求企业变革运行方式。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "成功实施ERP的过程伴随着企业的管理变革。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 297,
+        "sourceNumber": 33,
+        "type": "judge",
+        "question": "相关需求的物料类型主要是成品。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "相关需求的物料类型是原材料、在制品等，成品的需求属于独立需求。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 298,
+        "sourceNumber": 34,
+        "type": "judge",
+        "question": "产品的包装物不是相关需求。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "在绝大多数生产环境下，包装物的需求是与最终产品的生产计划直接挂钩的，因此是相关需求。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 299,
+        "sourceNumber": 35,
+        "type": "judge",
+        "question": "库存状态文件保存了每一种物料的库存数据，是MRP计算的重要依据。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "库存状态文件包含总需要量、预计到货量、现有数等信息，是MRP计算净需要量和计划发出订货量的关键输入。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 300,
+        "sourceNumber": 36,
+        "type": "judge",
+        "question": "闭环MRP包含了能力需求计划和信息反馈机制。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "闭环MRP补充了编制能力需求计划和建立信息反馈机制。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 301,
+        "sourceNumber": 37,
+        "type": "judge",
+        "question": "独立需求通常发生在制造过程中，可采用MRP精确计算。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "独立需求是来自企业外部客户的需求，相关需求发生在制造过程中。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 302,
+        "sourceNumber": 38,
+        "type": "judge",
+        "question": "流程式生产企业（如钢铁厂）适合应用MRP系统进行物料需求计划。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "MRP主要适用于加工装配式生产行业，流程式生产企业（如钢铁厂、炼油厂）由于原材料均匀投入生产，难以应用MRP或应用优势不明显。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 303,
+        "sourceNumber": 39,
+        "type": "judge",
+        "question": "MRP系统的主要输入包括主生产计划（MPS）、物料清单（BOM）和库存状态文件。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "MRP的三大主要输入是主生产计划（MPS）、物料清单（BOM）和库存状态文件，这三大输入是MRP运行的基础。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 304,
+        "sourceNumber": 40,
+        "type": "judge",
+        "question": "MRP将企业生产过程中的所有物料视为独立项目进行管理。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "MRP的基本思想是打破产品品种之间的界线，把所有产品、零部件、原材料等视为相同的物料，进行统一管理。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 305,
+        "sourceNumber": 41,
+        "type": "judge",
+        "question": "产品出产计划说明哪些零件何时出产多少。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "产品出产计划说明哪些产品何时出产多少。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 306,
+        "sourceNumber": 42,
+        "type": "judge",
+        "question": "本质上看，MRPⅡ仍是以ERP为核心，但在功能和技术上却超越了ERP。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "ERP是在MRPⅡ基础上发展起来的，在功能和技术上全面超越和包含了MRPⅡ。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 307,
+        "sourceNumber": 43,
+        "type": "judge",
+        "question": "MRP计算物料需求时，同一物料按其在各个BOM中的最高层次编码。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "同一物料按其在各个BOM中的最低层次编码，以确保计算的准确性。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 308,
+        "sourceNumber": 44,
+        "type": "judge",
+        "question": "MRP可以防止形成“块状”需求，降低平均库存水平。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "MRP方法能够防止出现“块状”需求，从而降低平均库存水平。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 309,
+        "sourceNumber": 45,
+        "type": "judge",
+        "question": "MPG法的实质是要在订货费和维持库存费之间取得平衡。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "通常可以采用最大零件周期收益(MPG)法来解决订货批量经济性的问题，MPG法的实质是要在订货费和维持库存费之间取得平衡。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 310,
+        "sourceNumber": 46,
+        "type": "judge",
+        "question": "产品结构文件是MRP系统产生的。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "产品结构文件不是MRP系统产生的，而是MRP系统运行所必需的、最核心的三大输入信息之一。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 311,
+        "sourceNumber": 47,
+        "type": "judge",
+        "question": "订货点法适用于处理相关需求的物料。",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "订货点法适用于独立需求（如成品），而相关需求（如原材料、在制品）应采用MRP进行计划。订货点法无法考虑物料之间的依赖关系，不适用于相关需求。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 312,
+        "sourceNumber": 48,
+        "type": "judge",
+        "question": "MRP系统中，净需要量 = 总需要量 + 预计到货量 - 现有数。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "净需要量=总需要量-预计到货量-现有数。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 313,
+        "sourceNumber": 49,
+        "type": "judge",
+        "question": "MRP处理的是相关需求，因此不需要安全库存。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "MRP中通常只在原材料一级设置安全库存。",
+        "unit": "第八章客观测试题"
+      },
+      {
+        "id": 314,
+        "sourceNumber": 50,
+        "type": "judge",
+        "question": "MRP的基本思想是围绕物料转化来组织制造资源，实现按需要准时生产。(        )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "MRP的基本思想是围绕物料转化组织制造资源，实现按需准时生产。",
+        "unit": "第八章客观测试题"
+      }
+    ]
+  },
+  {
+    "name": "第九章客观测试题",
+    "questions": [
+      {
+        "id": 315,
+        "sourceNumber": 1,
+        "type": "judge",
+        "question": "精益生产方式的库存管理强调“库存是必要的恶物”;大批量生产方式的库存管理强调“库存是万恶之源”。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 316,
+        "sourceNumber": 2,
+        "type": "judge",
+        "question": "JIT认为质量是设计制造出来的，而不是检验出来的。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 317,
+        "sourceNumber": 3,
+        "type": "judge",
+        "question": "超额完成生产任务是应该鼓励的。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 318,
+        "sourceNumber": 4,
+        "type": "judge",
+        "question": "活动即使增加价值，但耗用的资源超过了“绝对最少”的界限，也是浪费。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 319,
+        "sourceNumber": 5,
+        "type": "judge",
+        "question": "JIT生产采用的是推动式生产系统。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 320,
+        "sourceNumber": 6,
+        "type": "judge",
+        "question": "精益产品要消耗较多原材料。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 321,
+        "sourceNumber": 7,
+        "type": "judge",
+        "question": "零缺陷通常是整个企业质量工作的愿景目标。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 322,
+        "sourceNumber": 8,
+        "type": "judge",
+        "question": "精益生产(Lean Production，简称LP)是美国麻省理工学院数位国际汽车计划组织(IMVP)的专家对日本丰田准时化生产JIT(Just In Time)生产方式的赞誉称呼。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 323,
+        "sourceNumber": 9,
+        "type": "judge",
+        "question": "JIT生产方式是库存为零的生产方式。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 324,
+        "sourceNumber": 10,
+        "type": "judge",
+        "question": "按照JIT哲理，凡是不增加价值的活动都是浪费。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 325,
+        "sourceNumber": 11,
+        "type": "judge",
+        "question": "JIT生产是指不发生任何延误的生产。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 326,
+        "sourceNumber": 12,
+        "type": "judge",
+        "question": "按照JIT思想，库存不仅浪费了资源，而且掩盖了管理中的各种问题。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "对",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 327,
+        "sourceNumber": 13,
+        "type": "judge",
+        "question": "看板管理按照准时化生产的概念把当前工序看成用户，只有当前工序提出需求时，后工序才允许生产，看板充当了传递质量的角色。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 328,
+        "sourceNumber": 14,
+        "type": "judge",
+        "question": "按照精益生产不断降低成本的要求，选择供应商首先应该考虑价格。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 329,
+        "sourceNumber": 15,
+        "type": "judge",
+        "question": "整顿就是区分要与不要，将不要的东西及时清理出现场。( )",
+        "options": [
+          "A. 对",
+          "B. 错"
+        ],
+        "answer": "错",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 330,
+        "sourceNumber": 16,
+        "type": "single",
+        "question": "以下哪项不是“5S”活动的一部分?( )",
+        "options": [
+          "A. 操练",
+          "B. 整理",
+          "C. 清扫",
+          "D. 整顿",
+          "E. 清洁"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 331,
+        "sourceNumber": 17,
+        "type": "single",
+        "question": "准时生产是美国管理学家对以( )为代表的生产方式的概括。",
+        "options": [
+          "A. 丰田汽车",
+          "B. 克莱斯勒汽车",
+          "C. 通用汽车",
+          "D. 福特汽车"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 332,
+        "sourceNumber": 18,
+        "type": "single",
+        "question": "丰田生产方式的基本思想是( )",
+        "options": [
+          "A. 彻底杜绝浪费",
+          "B. 提高生产效率",
+          "C. 围绕品质、效率、效益三大主线",
+          "D. 准时化、自动化"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 333,
+        "sourceNumber": 19,
+        "type": "single",
+        "question": "在JIT生产方式中的许多具体方法都是围绕( )而展开的。",
+        "options": [
+          "A. 通过彻底排除浪费来降低成本",
+          "B. 在正确的时间做正确的事",
+          "C. 只能生产卖得出去的产品",
+          "D. 在需要的时候，按需要的数量生产所需的产品"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 334,
+        "sourceNumber": 20,
+        "type": "single",
+        "question": "以下哪项不是小批量生产的好处?( )",
+        "options": [
+          "A. 维持库存费低",
+          "B. 在制品库存低",
+          "C. 物料流动快",
+          "D. 每种产品生产的频数低"
+        ],
+        "answer": "D",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 335,
+        "sourceNumber": 21,
+        "type": "single",
+        "question": "精益生产的内容不包括( )",
+        "options": [
+          "A. 布置精细",
+          "B. 管理负责化",
+          "C. 过程精细",
+          "D. 产品精细",
+          "E. 组织精细"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 336,
+        "sourceNumber": 22,
+        "type": "single",
+        "question": "( )是大量重复性生产中实现JIT的一种简单而有效的方式。",
+        "options": [
+          "A. MRP系统",
+          "B. ERP系统",
+          "C. 看板管理",
+          "D. 推进式系统"
+        ],
+        "answer": "C",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 337,
+        "sourceNumber": 23,
+        "type": "single",
+        "question": "精益生产的创始人是( )",
+        "options": [
+          "A. 大野耐一",
+          "B. 泰勒",
+          "C. 亨利.福特",
+          "D. 丰田喜一郎"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 338,
+        "sourceNumber": 24,
+        "type": "single",
+        "question": "日本丰田汽车公司的生产系统采用的是( )。",
+        "options": [
+          "A. 牵引式系统",
+          "B. 推进式系统",
+          "C. 以上都不是",
+          "D. 混合式系统"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 339,
+        "sourceNumber": 25,
+        "type": "single",
+        "question": "实现JIT生产的重要手段是( )。",
+        "options": [
+          "A. 同步化生产",
+          "B. 看板管理",
+          "C. 主生产计划",
+          "D. 单件生产"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 340,
+        "sourceNumber": 26,
+        "type": "single",
+        "question": "JIT的核心是追求( )",
+        "options": [
+          "A. 零库存生产方式",
+          "B. EOQ方式",
+          "C. 柔性生产方式",
+          "D. 大量产出方式"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 341,
+        "sourceNumber": 27,
+        "type": "single",
+        "question": "( )的出发点是不断消除浪费，进行永无休止的改进。",
+        "options": [
+          "A. JIT",
+          "B. VE",
+          "C. ERP",
+          "D. MRP"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 342,
+        "sourceNumber": 28,
+        "type": "single",
+        "question": "以下哪项不是组织准时生产的条件:( )",
+        "options": [
+          "A. 建立U型生产单元",
+          "B. 减少调整准备时间",
+          "C. 准时采购",
+          "D. 建立推进式系统"
+        ],
+        "answer": "D",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 343,
+        "sourceNumber": 29,
+        "type": "single",
+        "question": "丰田生产方式的目的在于彻底杜绝各种浪费，以提高生产( )",
+        "options": [
+          "A. 效率",
+          "B. 周期",
+          "C. 交货期",
+          "D. 成本"
+        ],
+        "answer": "A",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 344,
+        "sourceNumber": 30,
+        "type": "single",
+        "question": "下面不属于七大浪费的是( )",
+        "options": [
+          "A.\n\n库存浪费",
+          "B.\n\n时间浪费",
+          "C.\n\n等待浪费",
+          "D.\n\n过量生产"
+        ],
+        "answer": "B",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 345,
+        "sourceNumber": 31,
+        "type": "multiple",
+        "question": "按照准时化生产方式的理念，下列属于浪费的是( )。",
+        "options": [
+          "A. 大量的库存在制品",
+          "B. 过剩的零部件",
+          "C. 停工待料",
+          "D. 为合作的供应商支付的培训费"
+        ],
+        "answer": "ABC",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 346,
+        "sourceNumber": 32,
+        "type": "multiple",
+        "question": "精益生产方式的两大支柱是( )",
+        "options": [
+          "A. 自动化",
+          "B. 理论化",
+          "C. 标准化",
+          "D. 准时化"
+        ],
+        "answer": "AD",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 347,
+        "sourceNumber": 33,
+        "type": "multiple",
+        "question": "以下哪些活动是属于浪费?( )",
+        "options": [
+          "A. 装配",
+          "B. 油漆",
+          "C. 点数",
+          "D. 质检",
+          "E. 运输"
+        ],
+        "answer": "CDE",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 348,
+        "sourceNumber": 34,
+        "type": "multiple",
+        "question": "从概念上讲，JIT可做到:( )",
+        "options": [
+          "A. 没有无事可干的工人",
+          "B. 没有等待零件加工的机器",
+          "C. 工件在加工过程中没有等待",
+          "D. 仓库里没有存货"
+        ],
+        "answer": "ABCD",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 349,
+        "sourceNumber": 35,
+        "type": "multiple",
+        "question": "为实现准时采购，选择供应商时，一般考虑以下哪些因素?( )",
+        "options": [
+          "A. 价格",
+          "B. 合作的愿望",
+          "C. 质量",
+          "D. 地理位置",
+          "E. 技术竞争力"
+        ],
+        "answer": "ABCDE",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 350,
+        "sourceNumber": 36,
+        "type": "multiple",
+        "question": "以下哪些是精益生产必须消除的浪费?( )",
+        "options": [
+          "A. 库存浪费",
+          "B. 不合格品的浪费",
+          "C. 等待的浪费",
+          "D. 制造过多的浪费"
+        ],
+        "answer": "ABCD",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 351,
+        "sourceNumber": 37,
+        "type": "multiple",
+        "question": "JIT认为库存是恶魔，因为( )",
+        "options": [
+          "A. 库存是生产过程中的缓冲器",
+          "B. 库存占用大量资金",
+          "C. 库存是一种浪费活动",
+          "D. 库存掩盖了生产中的问题"
+        ],
+        "answer": "BCD",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 352,
+        "sourceNumber": 38,
+        "type": "multiple",
+        "question": "全面实行精益生产的企业包括以下几个方面( )",
+        "options": [
+          "A.\n\n生产过程精细",
+          "B.\n\n产品精细",
+          "C.\n\n对环境污染少",
+          "D.\n\n工厂布置精细",
+          "E.\n\n组织精细"
+        ],
+        "answer": "ABCDE",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 353,
+        "sourceNumber": 39,
+        "type": "multiple",
+        "question": "准时生产方式追求的目标是( )",
+        "options": [
+          "A. 零库存",
+          "B. 零浪费",
+          "C. 零调整准备时间",
+          "D. 零缺陷"
+        ],
+        "answer": "ABCD",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      },
+      {
+        "id": 354,
+        "sourceNumber": 40,
+        "type": "multiple",
+        "question": "精益生产的主要特征包括( )",
+        "options": [
+          "A. 拉动式生产",
+          "B. 推动式生产",
+          "C. 最大限度的减少库存",
+          "D. 实现准时化生产"
+        ],
+        "answer": "ACD",
+        "analysis": "",
+        "unit": "第九章客观测试题"
+      }
+    ]
+  }
+];
+
+(() => {
+  "use strict";
+
+  const MASTERED_KEY = "operations-management-mastered-v1";
+  const ANSWERS_KEY = "operations-management-answers-v2";
+  const THEME_KEY = "operations-management-theme-v1";
+  const originalUnit = { name: "原40题复习题库", questions: questions.map(q => ({ ...q, unit: "原40题复习题库", sourceNumber: q.id })) };
+  const unitGroups = [originalUnit, ...courseUnits];
+  const allQuestions = unitGroups.flatMap(unit => unit.questions);
+  const list = document.getElementById("questionList");
+  const searchInput = document.getElementById("searchInput");
+  const emptyState = document.getElementById("emptyState");
+  const unitSelect = document.getElementById("unitSelect");
+  const openAnswers = new Set();
+  let filterMode = "all";
+  let activeUnit = originalUnit.name;
+  let mastered = readJSON(MASTERED_KEY, [], value => new Set(Array.isArray(value) ? value.map(Number) : []));
+  let answerState = readJSON(ANSWERS_KEY, {}, value => value && typeof value === "object" ? value : {});
+
+  function readJSON(key, fallback, transform = value => value) {
+    try { return transform(JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback))); }
+    catch (_) { return transform(fallback); }
+  }
+
+  function saveMastered() {
+    localStorage.setItem(MASTERED_KEY, JSON.stringify([...mastered]));
+  }
+
+  function saveAnswers() {
+    localStorage.setItem(ANSWERS_KEY, JSON.stringify(answerState));
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
+  }
+
+  function normalizedAnswer(q) {
+    if (q.type === "judge") {
+      if (q.answer.includes("对")) return "A";
+      if (q.answer.includes("错")) return "B";
+    }
+    return (q.answer.match(/[A-E]/g) || []).sort().join("");
+  }
+
+  function normalizedSelection(selected) {
+    return [...new Set(selected || [])].sort().join("");
+  }
+
+  function stateFor(id) {
+    const state = answerState[id] || {};
+    return {
+      selected: Array.isArray(state.selected) ? state.selected.filter(x => /^[A-E]$/.test(x)) : [],
+      submitted: Boolean(state.submitted),
+      correct: Boolean(state.correct),
+      everWrong: Boolean(state.everWrong) || (Boolean(state.submitted) && !Boolean(state.correct)),
+      attempts: Number(state.attempts) || (state.submitted ? 1 : 0)
+    };
+  }
+
+  function getFilteredQuestions() {
+    const keyword = searchInput.value.trim().toLowerCase();
+    return allQuestions.filter(q => {
+      if (q.unit !== activeUnit) return false;
+      const state = stateFor(q.id);
+      if (filterMode === "unmastered" && mastered.has(q.id)) return false;
+      if (filterMode === "wrong" && !state.everWrong) return false;
+      if (filterMode === "unanswered" && state.submitted) return false;
+      if (!keyword) return true;
+      const haystack = [q.id, q.question, ...q.options].join(" ").toLowerCase();
+      const normalized = keyword.replace(/^第|题$/g, "");
+      return haystack.includes(keyword) || String(q.id) === normalized;
+    });
+  }
+
+  function optionTemplate(q, option, state) {
+    const letter = option.charAt(0).toUpperCase();
+    const selected = state.selected.includes(letter);
+    const correctLetters = normalizedAnswer(q);
+    const isCorrectOption = state.submitted && correctLetters.includes(letter);
+    const isWrongChoice = state.submitted && selected && !correctLetters.includes(letter);
+    const classes = ["option", isCorrectOption ? "correct-option" : "", isWrongChoice ? "wrong-option" : ""].filter(Boolean).join(" ");
+    const type = q.type === "multiple" ? "checkbox" : "radio";
+    return `<li class="${classes}"><label><input type="${type}" name="question-${q.id}" value="${letter}" ${selected ? "checked" : ""}><span>${escapeHtml(option)}</span></label></li>`;
+  }
+
+  function resultTemplate(q, state) {
+    if (!state.submitted) return "";
+    const yours = state.selected.length ? normalizedSelection(state.selected) : "未选择";
+    return `<div class="submit-result ${state.correct ? "correct-result" : "wrong-result"}" role="status">
+      <strong>${state.correct ? "✓ 回答正确" : "✕ 回答错误"}</strong>
+      <span>你的答案：${escapeHtml(yours)}</span>
+      <span>正确答案：${escapeHtml(q.answer)}</span>
+      ${state.everWrong && state.correct ? '<span class="corrected-note">已订正 · 曾答错</span>' : ""}
+    </div>`;
+  }
+
+  function cardTemplate(q) {
+    const isMastered = mastered.has(q.id);
+    const state = stateFor(q.id);
+    const answerOpen = openAnswers.has(q.id);
+    const resultClass = state.submitted ? (state.correct ? " answered-correct" : " answered-wrong") : "";
+    return `
+      <article class="question-card${isMastered ? " mastered" : ""}${resultClass}" id="question-${q.id}" data-id="${q.id}">
+        <div class="card-head">
+          <div class="meta"><span class="number">第 ${q.sourceNumber || q.id} 题</span><span class="type-tag">${q.type === "judge" ? "判断题" : q.type === "single" ? "单选题" : q.type === "calculation" ? "计算题" : "多选题"}</span></div>
+          <span class="card-badges">${state.everWrong ? `<span class="history-wrong-badge">${state.correct ? "已订正 · 曾答错" : "曾答错"}</span>` : ""}<span class="mastered-badge">${isMastered ? "✓ 已掌握" : "未掌握"}</span></span>
+        </div>
+        <p class="question-text">${escapeHtml(q.question)}</p>
+        ${q.type === "calculation" ? '<div class="calculation-note">请先自行计算，再点击“显示答案”核对解题过程。</div>' : `<ul class="options">${q.options.map(option => optionTemplate(q, option, state)).join("")}</ul>`}
+        <div class="card-actions">
+          ${q.type === "calculation" ? "" : '<button class="submit-btn primary" type="button">提交本题</button><button class="clear-btn" type="button">清空选择</button>'}
+          <button class="answer-btn" type="button" aria-expanded="${answerOpen}">${answerOpen ? "隐藏答案" : "显示答案"}</button>
+          <button class="master-btn${isMastered ? " is-mastered" : ""}" type="button">${isMastered ? "取消掌握" : "已掌握"}</button>
+        </div>
+        ${resultTemplate(q, state)}
+        <div class="answer-panel" ${answerOpen ? "" : "hidden"}>正确答案：${escapeHtml(q.answer)}</div>
+      </article>`;
+  }
+
+  function updateStats() {
+    const currentQuestions = allQuestions.filter(q => q.unit === activeUnit);
+    const states = currentQuestions.map(q => stateFor(q.id)).filter(state => state.submitted);
+    const correct = states.filter(state => state.correct).length;
+    const wrong = currentQuestions.filter(q => stateFor(q.id).everWrong).length;
+    document.getElementById("masteredCount").textContent = mastered.size;
+    document.getElementById("answeredCount").textContent = states.length;
+    document.getElementById("correctCount").textContent = correct;
+    document.getElementById("wrongCount").textContent = wrong;
+    document.getElementById("accuracyCount").textContent = states.length ? `${Math.round(correct / states.length * 100)}%` : "—";
+    document.getElementById("totalCount").textContent = currentQuestions.length;
+    document.getElementById("multipleCount").textContent = currentQuestions.filter(q => q.type === "multiple" || q.type === "single").length;
+    document.getElementById("judgeCount").textContent = currentQuestions.filter(q => q.type === "judge").length;
+  }
+
+  function render() {
+    const visible = getFilteredQuestions();
+    list.innerHTML = visible.map(cardTemplate).join("");
+    emptyState.hidden = visible.length !== 0;
+    document.getElementById("resultCount").textContent = `显示 ${visible.length} 道题`;
+    updateStats();
+  }
+
+  function submitQuestion(id) {
+    const q = allQuestions.find(item => item.id === id);
+    const state = stateFor(id);
+    if (!state.selected.length) return false;
+    state.submitted = true;
+    state.correct = normalizedSelection(state.selected) === normalizedAnswer(q);
+    state.attempts += 1;
+    state.everWrong = state.everWrong || !state.correct;
+    answerState[id] = state;
+    return true;
+  }
+
+  function setFilter(mode) {
+    filterMode = mode;
+    const buttons = { unmastered: "unmasteredOnly", wrong: "wrongOnly", unanswered: "unansweredOnly", all: "showAllQuestions" };
+    Object.entries(buttons).forEach(([key, id]) => document.getElementById(id).setAttribute("aria-pressed", String(key === mode)));
+    const labels = { unmastered: "正在只看未掌握题目", wrong: "正在只看错题", unanswered: "正在只看未作答题目" };
+    const hint = document.getElementById("filterHint");
+    hint.hidden = mode === "all";
+    hint.textContent = labels[mode] || "";
+    render();
+  }
+
+  function setAllAnswers(show) {
+    getFilteredQuestions().forEach(q => show ? openAnswers.add(q.id) : openAnswers.delete(q.id));
+    render();
+  }
+
+  list.addEventListener("change", event => {
+    if (!event.target.matches('input[type="checkbox"], input[type="radio"]')) return;
+    const card = event.target.closest(".question-card");
+    const id = Number(card.dataset.id);
+    const inputs = [...card.querySelectorAll(".option input:checked")];
+    const previous = stateFor(id);
+    answerState[id] = { selected: inputs.map(input => input.value), submitted: false, correct: false, everWrong: previous.everWrong, attempts: previous.attempts };
+    saveAnswers();
+    render();
+  });
+
+  list.addEventListener("click", event => {
+    const card = event.target.closest(".question-card");
+    if (!card) return;
+    const id = Number(card.dataset.id);
+    if (event.target.closest(".submit-btn")) {
+      if (!submitQuestion(id)) {
+        card.classList.add("needs-answer");
+        setTimeout(() => card.classList.remove("needs-answer"), 900);
+        return;
+      }
+      saveAnswers();
+      render();
+    } else if (event.target.closest(".clear-btn")) {
+      const previous = stateFor(id);
+      answerState[id] = { selected: [], submitted: false, correct: false, everWrong: previous.everWrong, attempts: previous.attempts };
+      saveAnswers();
+      render();
+    } else if (event.target.closest(".answer-btn")) {
+      openAnswers.has(id) ? openAnswers.delete(id) : openAnswers.add(id);
+      render();
+    } else if (event.target.closest(".master-btn")) {
+      mastered.has(id) ? mastered.delete(id) : mastered.add(id);
+      saveMastered();
+      render();
+    }
+  });
+
+  searchInput.addEventListener("input", render);
+  document.getElementById("showAll").addEventListener("click", () => setAllAnswers(true));
+  document.getElementById("hideAll").addEventListener("click", () => setAllAnswers(false));
+  document.getElementById("unmasteredOnly").addEventListener("click", () => setFilter("unmastered"));
+  document.getElementById("wrongOnly").addEventListener("click", () => setFilter("wrong"));
+  document.getElementById("unansweredOnly").addEventListener("click", () => setFilter("unanswered"));
+  document.getElementById("showAllQuestions").addEventListener("click", () => setFilter("all"));
+  document.getElementById("submitAll").addEventListener("click", () => {
+    allQuestions.filter(q => q.unit === activeUnit && q.type !== "calculation").forEach(q => submitQuestion(q.id));
+    saveAnswers();
+    render();
+  });
+  document.getElementById("clearAll").addEventListener("click", () => {
+    if (Object.keys(answerState).length && !window.confirm("确定要清空全部作答记录吗？")) return;
+    answerState = {};
+    saveAnswers();
+    setFilter("all");
+  });
+  document.getElementById("resetMastered").addEventListener("click", () => {
+    if (mastered.size && !window.confirm("确定要清除全部已掌握状态吗？")) return;
+    mastered.clear();
+    saveMastered();
+    render();
+  });
+  document.getElementById("randomQuestion").addEventListener("click", () => {
+    const pool = getFilteredQuestions();
+    if (!pool.length) return;
+    const chosen = pool[Math.floor(Math.random() * pool.length)];
+    const card = document.getElementById(`question-${chosen.id}`);
+    card.scrollIntoView({ behavior: "smooth", block: "center" });
+    card.classList.remove("random-hit");
+    void card.offsetWidth;
+    card.classList.add("random-hit");
+  });
+
+  unitSelect.innerHTML = unitGroups.map(unit => `<option value="${escapeHtml(unit.name)}">${escapeHtml(unit.name)}（${unit.questions.length}题）</option>`).join("");
+  unitSelect.addEventListener("change", () => {
+    activeUnit = unitSelect.value;
+    searchInput.value = "";
+    setFilter("all");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  const themeToggle = document.getElementById("themeToggle");
+  function applyTheme(theme) {
+    const dark = theme === "dark";
+    document.body.classList.toggle("dark", dark);
+    themeToggle.textContent = dark ? "☀ 浅色模式" : "☾ 深色模式";
+  }
+  applyTheme(localStorage.getItem(THEME_KEY) || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+  themeToggle.addEventListener("click", () => {
+    const theme = document.body.classList.contains("dark") ? "light" : "dark";
+    localStorage.setItem(THEME_KEY, theme);
+    applyTheme(theme);
+  });
+
+  const backToTop = document.getElementById("backToTop");
+  window.addEventListener("scroll", () => backToTop.classList.toggle("visible", window.scrollY > 500), { passive: true });
+  backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  render();
+})();
+
+  </script>
+</body>
+</html>
