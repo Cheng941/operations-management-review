@@ -58,6 +58,7 @@ h1 { margin: 0; font-size: clamp(28px, 5vw, 42px); letter-spacing: -.04em; line-
 .search-wrap input { width: 100%; padding: 10px 0; border: 0; outline: 0; color: var(--text); background: transparent; }
 .search-wrap input::placeholder { color: var(--muted); }
 .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.tools-toggle { display: none; }
 button { padding: 8px 13px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); cursor: pointer; transition: transform .15s, border-color .15s, background .15s; }
 button:hover { border-color: #b9b8b5; background: var(--soft); }
 button:active { transform: scale(.98); }
@@ -121,7 +122,11 @@ body.dark button.primary { color: #102416; background: var(--green); }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .stat { padding: 14px 16px; }
   .toolbar { top: 6px; }
-  .actions { display: grid; grid-template-columns: repeat(2, 1fr); }
+  .tools-toggle { display: flex; width: 100%; align-items: center; justify-content: space-between; margin-top: 10px; color: var(--muted); }
+  .tools-toggle b { font-size: 18px; line-height: 1; transition: transform .2s; }
+  .toolbar.tools-open .tools-toggle b { transform: rotate(180deg); }
+  .actions { display: none; grid-template-columns: repeat(2, 1fr); }
+  .toolbar.tools-open .actions { display: grid; }
   .actions button { padding: 9px 6px; font-size: 13px; }
   .question-card { scroll-margin-top: 225px; padding: 17px 15px; }
   .card-head { align-items: flex-start; }
@@ -172,7 +177,10 @@ body.dark button.primary { color: #102416; background: var(--green); }
         <span aria-hidden="true">⌕</span>
         <input id="searchInput" type="search" placeholder="搜索题号或关键词…" autocomplete="off" aria-label="搜索题目">
       </div>
-      <div class="actions">
+      <button id="toolsToggle" class="tools-toggle" type="button" aria-expanded="false" aria-controls="toolbarActions">
+        <span>展开工具</span><b aria-hidden="true">⌄</b>
+      </button>
+      <div id="toolbarActions" class="actions">
         <button id="submitAll" class="primary" type="button">提交全部</button>
         <button id="clearAll" type="button">清空全部</button>
         <button id="showAll" type="button">展开全部答案</button>
@@ -5005,6 +5013,13 @@ const courseUnits = [
   });
 
   searchInput.addEventListener("input", render);
+  const toolbar = document.querySelector(".toolbar");
+  const toolsToggle = document.getElementById("toolsToggle");
+  toolsToggle.addEventListener("click", () => {
+    const open = toolbar.classList.toggle("tools-open");
+    toolsToggle.setAttribute("aria-expanded", String(open));
+    toolsToggle.querySelector("span").textContent = open ? "收起工具" : "展开工具";
+  });
   document.getElementById("showAll").addEventListener("click", () => setAllAnswers(true));
   document.getElementById("hideAll").addEventListener("click", () => setAllAnswers(false));
   document.getElementById("unmasteredOnly").addEventListener("click", () => setFilter("unmastered"));
